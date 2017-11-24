@@ -1,0 +1,2 @@
+Tenemos hasta el 19/1/18 para realizar la entrega, en el primer hito 1/12/17 tendremos idoneamente implementado lo que se indica 
+en el documento de historias de usuario. El objetivo es terminar el juego una semana antes 12/1/18
