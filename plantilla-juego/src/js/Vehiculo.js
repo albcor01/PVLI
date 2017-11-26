@@ -19,17 +19,70 @@ var vehicle = function(game)//tipo indica si es el jugador o es un enemigo enemi
 var player=function(game)
 {
   this.game=game;
-  vehicle.call(this,game);
+  vehicle.call(this, game);
 };
-player.prototype=Object.create(vehicle.prototype);
-player.prototype.constructor= player;
+player.prototype = Object.create(vehicle.prototype);
+player.prototype.constructor = player;
 
 
-var enemigo=function()
+var enemigo=function(game, turnRate)
 {
-  enemigo=Object.create(vehicle.prototype);
-  enemigo.prototype.constructor=enemigo;
+  this.currentFlag = 0;
+  this.turnRate = turnRate;
+  this.game = game;
+  vehicle.call(this, game);
 };
+enemigo.prototype = Object.create(vehicle.prototype);
+enemigo.prototype.constructor = enemigo;
+
+enemigo.prototype.update = function(game, point)
+{
+  
+  var targetAngle = game.physics.arcade.angleBetween(this.spriteCoche, point[this.currentFlag]);
+
+  if(this.spriteCoche.rotation !== targetAngle)
+  {
+    var delta = targetAngle - this.spriteCoche.rotation;
+
+    if(delta > Math.PI) delta -= Math.PI * 2;
+    if(delta < -Math.PI) delta += Math.PI * 2;
+
+    if(delta > 0)
+    {
+      this.spriteCoche.angle += this.turnRate;
+    }
+    else
+    {
+      this.spriteCoche.angle -= this.turnRate;
+    }
+
+    if(Math.abs(delta) < game.math.degToRad(this.turnRate))
+    {
+      this.rotation = targetAngle;
+    }
+  }
+
+  if(this.velocity < this.MaxVelocity)
+  this.velocity += this.acceleration;
+
+{
+  game.physics.arcade.velocityFromRotation(this.spriteCoche.rotation, this.velocity, this.spriteCoche.body.velocity); 
+}
+
+this.game.physics.arcade.overlap(this.spriteCoche, point[this.currentFlag],
+  function()
+  {
+    if(this.currentFlag >= 5)
+    this.currentFlag = 0;
+    else
+    this.currentFlag++;
+    
+  }
+  ,null,this);
+
+
+
+}
 
  player.prototype.update = function(cursors,game)
 {
@@ -65,10 +118,9 @@ var enemigo=function()
     this.velocity+=this.acceleration;
   } 
 
-  { game.physics.arcade.velocityFromRotation(this.spriteCoche.rotation, this.velocity, this.spriteCoche.body.velocity); 
-   
+  { 
+    game.physics.arcade.velocityFromRotation(this.spriteCoche.rotation, this.velocity, this.spriteCoche.body.velocity); 
   }
- console.log(this.spriteCoche.body.rotation);
   
 };
 
@@ -76,17 +128,5 @@ var enemigo=function()
   {
     vehicle,
     player,
+    enemigo,
   }
-
- /* else
-  {
-    if(this.velocity >= 0)
-    {
-      this.velocity -= this.acceleration;
-    }
-    else this.velocity = 0;
-  }
-  */
-
-  //if(this.velocity > 0)
- 
