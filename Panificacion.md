@@ -36,38 +36,38 @@ Tenemos hasta el 19/1/18 para realizar la entrega, El objetivo es terminar el ju
 	</td>
    </tr>
 	
-	<tr>
+<tr>
 	<td>11/12/17</td>
     <td>-Mejorar movimiento enemigos
 		<br>-preparar presentacion hito 2</td> 
     <td>-Colisión con sólidos
 		<br>-muerte de los vehiculos
 		<br>-preparar presentacion hito 2</td>
-	</tr>
+</tr>
 	
-	<tr>
+<tr>
 	<td>18/12/17</td>
 	<td>Hacer menus del juego</td> 
 	<td>Hacer bala que congela</td>
-	</tr>
+</tr>
 	
-	<tr>
+<tr>
 	<td>25/12/17</td>
 	<td>hacer pagina web en html</td> 
 	<td>Animacion de vehiculos </td>
-	</tr>
+</tr>
 	
-	<tr>
+<tr>
 	<td>1/1/18</td>
 	<td>implementacion de Sonidos y musica</td> 
 	<td>insertar sprites</td>
-	</tr>
+</tr>
 	
-	<tr>
+<tr>
 	<td>8/12/17</td>
 	<td>Arreglar fallos</td> 
 	<td>Arreglar fallos</td>
-	</tr>
+</tr>
 </table>
 <h4>Cada semana incluye su fase de arreglo de errores<h4>
 
