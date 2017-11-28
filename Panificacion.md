@@ -7,21 +7,25 @@ Tenemos hasta el 19/1/18 para realizar la entrega, El objetivo es terminar el ju
     <th>Alberto Córdoba</th> 
     <th>Mario De los Santos</th>
   </tr>
+  
   <tr>
     <td>13/11/17</td>
     <td>herencias y movimiento player</td> 
     <td>herencias y movimiento player</td>
   </tr>
+  
   <tr>
     <td>20/11/17</td>
     <td>Movimiento del enemigo por puntos</td> 
     <td>Charco relentizador</td>
   </tr>
+  
   <tr>
     <td>27/12/17</td>
     <td>Preparar presentación</td> 
     <td>preparar presentación</td>
   </tr>
+  
    <tr>
     <td>4/12/17</td>
     <td>-Actualizar herencias<br>
@@ -30,7 +34,8 @@ Tenemos hasta el 19/1/18 para realizar la entrega, El objetivo es terminar el ju
     <td>-Derrape de los coches<br> 
 		-Charco que aumenta derrape
 	</td>
-	</tr>
+   </tr>
+	
 	<tr>
 	<td>11/12/17</td>
     <td>-Mejorar movimiento enemigos
@@ -41,27 +46,27 @@ Tenemos hasta el 19/1/18 para realizar la entrega, El objetivo es terminar el ju
 	</tr>
 	
 	<tr>
-		<td>18/12/17</td>
-		<td>Hacer menus del juego</td> 
-		<td>Hacer bala que congela</td>
+	<td>18/12/17</td>
+	<td>Hacer menus del juego</td> 
+	<td>Hacer bala que congela</td>
 	</tr>
 	
 	<tr>
-		<td>25/12/17</td>
-		<td>hacer pagina web en html</td> 
-		<td>Animacion de vehiculos </td>
+	<td>25/12/17</td>
+	<td>hacer pagina web en html</td> 
+	<td>Animacion de vehiculos </td>
 	</tr>
 	
 	<tr>
-		<td>1/1/18</td>
-		<td>implementacion de Sonidos y musica</td> 
-		<td>insertar sprites</td>
+	<td>1/1/18</td>
+	<td>implementacion de Sonidos y musica</td> 
+	<td>insertar sprites</td>
 	</tr>
 	
 	<tr>
-		<td>8/12/17</td>
-		<td>Arreglar fallos</td> 
-		<td>Arreglar fallos</td>
+	<td>8/12/17</td>
+	<td>Arreglar fallos</td> 
+	<td>Arreglar fallos</td>
 	</tr>
 </table>
 <h4>Cada semana incluye su fase de arreglo de errores<h4>
