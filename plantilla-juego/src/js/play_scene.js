@@ -13,8 +13,8 @@ var PlayScene=
 {
 
 preload: function() {
-    this.game.load.image('road', '../images/carreteras.jpg');
-    this.game.load.image('car', '../images/coche.png');
+    this.game.load.image('road', 'images/carreteras.jpg');
+    this.game.load.image('car', 'images/coche.png');
     this.game.load.image('charco','images/charco.png');
     this.game.load.image('bandera','images/banderita.png');
 },
