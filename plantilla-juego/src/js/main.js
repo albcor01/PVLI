@@ -5,6 +5,9 @@
 
   var BootScene = {
     preload: function () {
+		
+		this.game.load.baseURL = 'https://albcor01.github.io/PVLI/plantilla-juego/src/index.html'  
+		
       // load here assets required for the loading screen
       this.game.load.image('preloader_bar', 'images/preloader_bar.png');
     },
