@@ -31,8 +31,7 @@ create: function() {
   this.sprite.name='charco';
   this.sprite.body.collideWorldBounds = true;
   this.sprite.body.immovable = true;
-  this.sprite.body.setSize(700, 100);
-  this.sprite.body.x=300; 
+  this.sprite.body.setSize(700, 100,50,50);
   this.sprite.anchor.set(0,0);
   
  //Pongo una banderita para hacer una prueba de movimiento (ESTO SE QUITARÁ)
@@ -68,6 +67,8 @@ create: function() {
 
 update: function() {
   //ESTO DEBE SER UNA FUNCION DE VEHICULO QUE LO LLAME TANTO JUGADOR COMO ENEMY 
+  this.game.debug.body(this.sprite);
+
   relentizar=false;
   if(!relentizar)
   {
