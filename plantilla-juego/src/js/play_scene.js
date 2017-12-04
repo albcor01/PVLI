@@ -1,11 +1,12 @@
 'use strict';
 //VEHICULOS
 
-var coche=require('./Vehiculo.js');
+var GO = require('./Vehiculo.js');
 
 var land;
 var cursors;
 var jugador;
+var charco;
 var enemy;
 var relentizar;
 var banderas = [];
@@ -24,15 +25,6 @@ create: function() {
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
   //colocamos el fondo
   this.game.add.tileSprite(0,0, 1600, 1700, 'road');
-  //Creamos el sprite y le damos características
-  this.sprite=this.game.add.sprite(100,100,'charco');
-  this.game.physics.enable(this.sprite,Phaser.Physics.ARCADE);
-  this.sprite.scale.setTo(0.15, 0.6);
-  this.sprite.name='charco';
-  this.sprite.body.collideWorldBounds = true;
-  this.sprite.body.immovable = true;
-  this.sprite.body.setSize(700, 100,50,50);
-  this.sprite.anchor.set(0,0);
   
  //Pongo una banderita para hacer una prueba de movimiento (ESTO SE QUITARÁ)
  
@@ -53,39 +45,28 @@ create: function() {
 
   this.game.world.setBounds(0,0, 1600, 1700);
 
-  
+  //creamos obstaculos
+  charco = new GO.gameObject(this.game, 'charco', 100, 100, 0, 0, 0.15, 0.6);
 
-  //creamos al jugador
-  jugador = new coche.player(this.game)
-  enemy = new coche.enemigo(this.game, 2);
+  //creamos al personajes
+  jugador = new GO.player(this.game, 'car', 300, 300, 0.5, 0.5, 0.1, 0.1);
+  enemy = new GO.enemigo(this.game, 2, 'car', 300, 300, 0.5, 0.5, 0.1, 0.1);
 
   //inicializamos en cursors la deteccion de cursores
   cursors = this.game.input.keyboard.createCursorKeys();
 
-  this.game.camera.follow(jugador.spriteCoche, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+  this.game.camera.follow(jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
 },
 
 update: function() {
-  //ESTO DEBE SER UNA FUNCION DE VEHICULO QUE LO LLAME TANTO JUGADOR COMO ENEMY 
-  this.game.debug.body(this.sprite);
-
-  relentizar=false;
-  if(!relentizar)
-  {
-    jugador.MaxVelocity=300;
-    jugador.MinVelocity=-150;
-  }
-  this.game.physics.arcade.overlap(jugador.spriteCoche,this.sprite,
-    function()
-    {
-      relentizar=true;
-      jugador.MaxVelocity=60;
-      jugador.MinVelocity=-60;
-    }
-    ,null,this);
-
+//UPDATE DE MOVIMIENTO
  jugador.update(cursors, this.game);
  enemy.update(this.game, banderas);
+
+//UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
+ jugador.detectaCharco(this.game, charco.sprite);
+ enemy.detectaCharco(this.game, charco.sprite);
+
 },
 
 render: function() {
