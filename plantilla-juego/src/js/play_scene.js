@@ -14,8 +14,8 @@ var PlayScene=
 {
 
 preload: function() {
-    this.game.load.image('road', '../images/carreteras.jpg');
-    this.game.load.image('car', '../images/coche.png');
+   this.game.load.image('road', '../images/carreteras.jpg');
+    this.game.load.image('car', '../images/vehiculos/truck.png');
     this.game.load.image('charco','images/charco.png');
     this.game.load.image('bandera','images/banderita.png');
 },
@@ -49,8 +49,8 @@ create: function() {
   charco = new GO.gameObject(this.game, 'charco', 100, 100, 0, 0, 0.15, 0.6);
 
   //creamos al personajes
-  jugador = new GO.player(this.game, 'car', 300, 300, 0.5, 0.5, 0.1, 0.1);
-  enemy = new GO.enemigo(this.game, 2, 'car', 300, 300, 0.5, 0.5, 0.1, 0.1);
+  jugador = new GO.player(this.game, 'car', 300, 300, 0.5, 0.5, 0.5, 0.5);
+  enemy = new GO.enemigo(this.game, 2, 'car', 300, 300, 0.5, 0.5, 0.5, 0.5);
 
   //inicializamos en cursors la deteccion de cursores
   cursors = this.game.input.keyboard.createCursorKeys();
