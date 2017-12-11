@@ -19,9 +19,9 @@ var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacal
 {
   this.game = game
   this.velocity = 0;
-  this.acceleration = 6;
-  this.MaxVelocity = 300;
-  this.MinVelocity =-150;  
+  this.acceleration = 10;
+  this.MaxVelocity = 900;
+  this.MinVelocity =-200;  
   this.alive = true;
  
   gameObject.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY);
@@ -102,7 +102,7 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
 //UPDATE PLAYER, DETECTA IMPUTS
  player.prototype.update = function(cursors,game)
 {
-
+console.log(this.velocity);
   if(this.velocity!=0)
   {
   if(cursors.left.isDown){ this.sprite.angle -= 2; }
@@ -119,7 +119,7 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
   }
   else if(cursors.down.isDown)
   { 
-    this.velocity -= this.acceleration; 
+    this.velocity -= this.acceleration*3; 
 
     if(this.velocity < this.MinVelocity)
     this.velocity = this.MinVelocity;
@@ -142,13 +142,13 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
 vehicle.prototype.detectaCharco = function(game, charco)
 {
   
-  game.debug.body(charco);
-  game.debug.body(this.sprite);
+  //game.debug.body(charco);
+  //game.debug.body(this.sprite);
   this.relentizar=false;
   if(!this.relentizar)
   {
-    this.MaxVelocity=300;
-    this.MinVelocity=-150;
+    this.MaxVelocity=900;
+    this.MinVelocity=-200;
   }
   game.physics.arcade.overlap(this.sprite, charco,
     function()
