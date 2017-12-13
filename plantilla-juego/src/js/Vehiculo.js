@@ -1,16 +1,20 @@
 
+
+
 //CONSTRUCTORA DE ELEMENTOS DEL MAPA
 var gameObject = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY)
 {
-  
+  this.deslizar=false;
   this.sprite = game.add.sprite(posX, posY, sprite);
   this.sprite.anchor.set(anchorX, anchorY);
   this.sprite.scale.setTo(scaleX, sacaleY);
   game.physics.enable(this.sprite,Phaser.Physics.ARCADE);
   
-  this.sprite.body.immovable = true;
+  this.sprite.body.immovable = false;
   this.sprite.body.colliderWorldBounds = true;
   this.sprite.body.bounce.setTo(1, 1);
+  this.sprite.body.setSize(250,100,0,65);
+  this.sprite.body.mass=100;
   this.sprite.allowRotation = true;
 }
 
@@ -80,9 +84,9 @@ enemigo.prototype.update = function(game, point)
   if(this.velocity < this.MaxVelocity)
   this.velocity += this.acceleration;
 
-{
+  if(!this.deslizar)
   game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
-}
+  else game.physics.arcade.accelerationFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.acceleration);
 
 this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
   function()
@@ -102,7 +106,6 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
 //UPDATE PLAYER, DETECTA IMPUTS
  player.prototype.update = function(cursors,game)
 {
-console.log(this.velocity);
   if(this.velocity!=0)
   {
   if(cursors.left.isDown){ this.sprite.angle -= 2; }
@@ -134,9 +137,9 @@ console.log(this.velocity);
     this.velocity+=this.acceleration;
   } 
 
-  { 
-    game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
-  }
+  if(!this.deslizar)
+  game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
+  else game.physics.arcade.accelerationFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.acceleration);
 };
 
 vehicle.prototype.detectaCharco = function(game, charco)
@@ -158,6 +161,29 @@ vehicle.prototype.detectaCharco = function(game, charco)
       this.MinVelocity = -60;
     },
      null, this);
+}
+
+vehicle.prototype.detectaCoche=function(sprite,game,enemigoSprite,enemigo,jugador)
+{
+  game.physics.arcade.collide(sprite,enemigoSprite,
+    
+    function()
+    {
+      if(jugador.velocity>700)
+      {
+      enemigo.deslizar=true;
+      enemigo.velocity=60;
+      this.game.time.events.add(Phaser.Timer.SECOND,
+      function()
+      {
+        enemigo.deslizar=false;
+        jugador.deslizar=false;
+      }
+      ,this)
+     }
+  }
+    
+    ,null,this);
 }
 
   module.exports=

@@ -51,10 +51,10 @@ create: function() {
   this.game.world.setBounds(0,0, 6000, 6000);
 
   //creamos obstaculos
-  charco = new GO.gameObject(this.game, 'charco', 100, 100, 0, 0, 0.15, 0.6);
+  charco = new GO.gameObject(this.game, 'charco', 5500, 4800, 0, 0, 0.15, 0.6);
 
   //creamos al personajes
-  jugador = new GO.player(this.game, 'car', 5500, 5000, 0.5, 0.5, 0.5, 0.5);
+  jugador = new GO.player(this.game, 'car', 300,200, 0.5, 0.5, 0.5, 0.5);
   enemy = new GO.enemigo(this.game, 2, 'car', 300, 300, 0.5, 0.5, 0.5, 0.5);
 
   //inicializamos en cursors la deteccion de cursores
@@ -67,11 +67,13 @@ update: function() {
 //UPDATE DE MOVIMIENTO
  jugador.update(cursors, this.game);
  enemy.update(this.game, banderas);
-
 //UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
  jugador.detectaCharco(this.game, charco.sprite);
+ jugador.detectaCoche(jugador.sprite,this.game,enemy.sprite,enemy,jugador);
+ //jugador.detectaCoche(jugador.sprite,this.game,enemy.sprite);
  enemy.detectaCharco(this.game, charco.sprite);
-
+this.game.debug.body(jugador.sprite);
+this.game.debug.body(enemy.sprite);
 },
 
 render: function() {
