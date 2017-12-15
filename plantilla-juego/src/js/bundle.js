@@ -1,60 +1,74 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
-var vehicle = function(game)//tipo indica si es el jugador o es un enemigo enemigo
+//CONSTRUCTORA DE ELEMENTOS DEL MAPA
+var gameObject = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY)
 {
-  this.velocity = 0;
-  this.acceleration = 6;
-  this.MaxVelocity = 300;
-  this.MinVelocity =-150;  
-  this.alive = true;
-  this.spriteCoche = game.add.sprite(300, 300, 'car');
-  this.spriteCoche.anchor.set(0.5,0.5);
-  this.spriteCoche.scale.setTo(0.1, 0.1);
-  game.physics.enable(this.spriteCoche,Phaser.Physics.ARCADE);
-  this.spriteCoche.body.immovable = true;
-  this.spriteCoche.body.colliderWorldBounds = true;
-  this.spriteCoche.body.bounce.setTo(1, 1);
-  this.spriteCoche.allowRotation=true;
-};
+  
+  this.sprite = game.add.sprite(posX, posY, sprite);
+  this.sprite.anchor.set(anchorX, anchorY);
+  this.sprite.scale.setTo(scaleX, sacaleY);
+  game.physics.enable(this.sprite,Phaser.Physics.ARCADE);
+  
+  this.sprite.body.immovable = true;
+  this.sprite.body.colliderWorldBounds = true;
+  this.sprite.body.bounce.setTo(1, 1);
+  this.sprite.allowRotation = true;
+}
 
-var player=function(game)
+//CONSTRUCOTRA DE VEHICULOS
+var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY)
+{
+  this.game = game
+  this.velocity = 0;
+  this.acceleration = 5;
+  this.MaxVelocity = 100;
+  this.MinVelocity =-100;  
+  this.alive = true;
+ 
+  gameObject.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY);
+};
+vehicle.prototype = Object.create(gameObject.prototype);
+vehicle.prototype.constructor = vehicle;
+
+//CONSTRUCTORA DE PLAYER
+var player=function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY)
 {
   this.game=game;
-  vehicle.call(this, game);
+  vehicle.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY);
 };
 player.prototype = Object.create(vehicle.prototype);
 player.prototype.constructor = player;
 
-
-var enemigo=function(game, turnRate)
+//CONSTRUCTORA DE ENEMIGO
+var enemigo=function(game, turnRate, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY)
 {
   this.currentFlag = 0;
   this.turnRate = turnRate;
   this.game = game;
-  vehicle.call(this, game);
+  vehicle.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY);
 };
 enemigo.prototype = Object.create(vehicle.prototype);
 enemigo.prototype.constructor = enemigo;
 
+//UPDATE ENEMIGO, SIGUE BANDERAS
 enemigo.prototype.update = function(game, point)
 {
-  
-  var targetAngle = game.physics.arcade.angleBetween(this.spriteCoche, point[this.currentFlag]);
+  var targetAngle = game.physics.arcade.angleBetween(this.sprite, point[this.currentFlag]);
 
-  if(this.spriteCoche.rotation !== targetAngle)
+  if(this.sprite.rotation !== targetAngle)
   {
-    var delta = targetAngle - this.spriteCoche.rotation;
+    var delta = targetAngle - this.sprite.rotation;
 
     if(delta > Math.PI) delta -= Math.PI * 2;
     if(delta < -Math.PI) delta += Math.PI * 2;
 
     if(delta > 0)
     {
-      this.spriteCoche.angle += this.turnRate;
+      this.sprite.angle += this.turnRate;
     }
     else
     {
-      this.spriteCoche.angle -= this.turnRate;
+      this.sprite.angle -= this.turnRate;
     }
 
     if(Math.abs(delta) < game.math.degToRad(this.turnRate))
@@ -67,32 +81,43 @@ enemigo.prototype.update = function(game, point)
   this.velocity += this.acceleration;
 
 {
-  game.physics.arcade.velocityFromRotation(this.spriteCoche.rotation, this.velocity, this.spriteCoche.body.velocity); 
+  game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
 }
 
-this.game.physics.arcade.overlap(this.spriteCoche, point[this.currentFlag],
+//console.log(this.sprite.body.x);
+//console.log(point[this.currentFlag].x);
+/*if((this.sprite.body.x <= point[this.currentFlag].x + 1 && this.sprite.body.x <= point[this.currentFlag].x - 1)
+    && (this.sprite.body.y <= point[this.currentFlag].y + 1 && this.sprite.body.y <= point[this.currentFlag].y - 1))
+{
+  console.log(this.currentFlag);
+  if(this.currentFlag >= point.length-1)
+  this.currentFlag = 0;
+  else
+  this.currentFlag++;
+}*/
+
+
+this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
   function()
   {
-    if(this.currentFlag >= 5)
+    if(this.currentFlag >= point.length-1)
     this.currentFlag = 0;
     else
     this.currentFlag++;
     
   }
   ,null,this);
-
-
-
 }
 
+//UPDATE PLAYER, DETECTA IMPUTS
  player.prototype.update = function(cursors,game)
 {
 
   if(this.velocity!=0)
   {
-  if(cursors.left.isDown){ this.spriteCoche.angle -= 2; }
+  if(cursors.left.isDown){ this.sprite.angle -= 2; }
 
-  else if(cursors.right.isDown){ this.spriteCoche.angle += 2; }
+  else if(cursors.right.isDown){ this.sprite.angle += 2; }
   }
 
    if(cursors.up.isDown)
@@ -104,7 +129,7 @@ this.game.physics.arcade.overlap(this.spriteCoche, point[this.currentFlag],
   }
   else if(cursors.down.isDown)
   { 
-    this.velocity -= this.acceleration; 
+    this.velocity -= this.acceleration*3; 
 
     if(this.velocity < this.MinVelocity)
     this.velocity = this.MinVelocity;
@@ -120,13 +145,34 @@ this.game.physics.arcade.overlap(this.spriteCoche, point[this.currentFlag],
   } 
 
   { 
-    game.physics.arcade.velocityFromRotation(this.spriteCoche.rotation, this.velocity, this.spriteCoche.body.velocity); 
+    game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
   }
-  
 };
+
+vehicle.prototype.detectaCharco = function(game, charco)
+{
+  
+  //game.debug.body(charco);
+  //game.debug.body(this.sprite);
+  this.relentizar=false;
+  if(!this.relentizar)
+  {
+    this.MaxVelocity=900;
+    this.MinVelocity=-200;
+  }
+  game.physics.arcade.overlap(this.sprite, charco,
+    function()
+    {
+      this.relentizar = true;
+      this.MaxVelocity = 60;
+      this.MinVelocity = -60;
+    },
+     null, this);
+}
 
   module.exports=
   {
+    gameObject,
     vehicle,
     player,
     enemigo,
@@ -141,7 +187,7 @@ this.game.physics.arcade.overlap(this.spriteCoche, point[this.currentFlag],
   var BootScene = {
     preload: function () {
       // load here assets required for the loading screen
-      this.game.load.image('preloader_bar', 'images/preloader_bar.png');
+     
     },
 
     create: function () {
@@ -152,10 +198,7 @@ this.game.physics.arcade.overlap(this.spriteCoche, point[this.currentFlag],
 
   var PreloaderScene = {  
     preload: function () { 
-      this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
-      this.loadingBar.anchor.setTo(0, 0.5);
-      this.load.setPreloadSprite(this.loadingBar);
-
+     
       // TODO: load here the assets for the game
       this.game.load.image('logo', 'images/phaser.png');
     },
@@ -179,90 +222,84 @@ this.game.physics.arcade.overlap(this.spriteCoche, point[this.currentFlag],
 'use strict';
 //VEHICULOS
 
-var coche=require('./Vehiculo.js');
+var GO = require('./Vehiculo.js');
 
-var land;
+
 var cursors;
 var jugador;
+var charco;
 var enemy;
 var relentizar;
-var banderas = [];
+
 var PlayScene=
 {
 
-preload: function() {
-    this.game.load.image('road', '../images/carreteras.jpg');
-    this.game.load.image('car', '../images/coche.png');
-    this.game.load.image('charco','images/charco.png');
-    this.game.load.image('bandera','images/banderita.png');
-},
+  preload: function() {
+    this.game.load.baseURL = 'https://raw.githubusercontent.com/albcor01/PVLI/ElementsMapa/plantilla-juego/src/';
+    this.game.load.crossOrigin = 'anonymous';
+  
+  
+      this.game.load.tilemap('level1', 'images/levels/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
+      this.load.text('level', 'images/levels/Mapa2.json');
+      this.game.load.image('Caminos', 'images/levels/spritesheet.png');
+      this.game.load.image('road', 'images/carreteras.jpg');
+      this.game.load.image('car', 'images/vehiculos/truck.png');
+      this.game.load.image('charco','images/charco.png');
+      this.game.load.image('bandera','images/banderita.png');
+  },
 
 create: function() {
+
+  this.levelData = JSON.parse(this.game.cache.getText('level'));
+  console.log(this.levelData.layers[1].objects[0].x);
+  
   //Iniciamos las fisicas de arcade
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
   //colocamos el fondo
-  this.game.add.tileSprite(0,0, 1600, 1700, 'road');
-  //Creamos el sprite y le damos características
-  this.sprite=this.game.add.sprite(100,100,'charco');
-  this.game.physics.enable(this.sprite,Phaser.Physics.ARCADE);
-  this.sprite.scale.setTo(0.15, 0.6);
-  this.sprite.name='charco';
-  this.sprite.body.collideWorldBounds = true;
-  this.sprite.body.immovable = true;
-  this.sprite.body.setSize(700, 100);
-  this.sprite.body.x=300; 
-  this.sprite.anchor.set(0,0);
+  //this.game.add.tileSprite(0,0, 5000, 5000, 'road');
+
+  this.map = this.game.add.tilemap('level1');
+  this.map.addTilesetImage('Caminos');
+  this.layer = this.map.createLayer('Suelo');
+  this.layer2 = this.map.createLayer('puntos');
+  this.layer.resizeWorld();
+  
   
  //Pongo una banderita para hacer una prueba de movimiento (ESTO SE QUITARÁ)
- 
-  var puntos = 6;
-  for(var i = 0; i < puntos; i++)
-  {
-    if (i < 3)
-    banderas.push(this.game.add.sprite(500*(i + 1), 100, 'bandera'));
-    else
-    banderas.push(this.game.add.sprite(500*(i - 2), 500, 'bandera'));
-
-    banderas[i].scale.setTo(0.1, 0.1);
-    this.game.physics.enable(banderas[i],Phaser.Physics.ARCADE);
-  }
- 
-
-
-
-  this.game.world.setBounds(0,0, 1600, 1700);
-
+  this.puntos = this.levelData.layers[1].objects.length;
+  this.banderas = [];
+  console.log(this.puntos);
   
+  for(var i = 0; i < this.puntos; i++)
+  {
+    this.banderas.push(this.game.add.sprite(this.levelData.layers[1].objects[i].x, this.levelData.layers[1].objects[i].y));
+    this.game.physics.enable(this.banderas[i],Phaser.Physics.ARCADE);
+    this.banderas[i].scale.setTo(0.1, 0.1);
+  }
+  console.log(this.banderas.length);
 
-  //creamos al jugador
-  jugador = new coche.player(this.game)
-  enemy = new coche.enemigo(this.game, 2);
+  //creamos obstaculos
+  charco = new GO.gameObject(this.game, 'charco', 100, 100, 0, 0, 0.15, 0.6);
+
+  //creamos al personajes
+  jugador = new GO.player(this.game, 'car', 5500, 5000, 0.5, 0.5, 0.5, 0.5);
+  enemy = new GO.enemigo(this.game, 4, 'car', 5500, 5000, 0.5, 0.5, 0.5, 0.5);
 
   //inicializamos en cursors la deteccion de cursores
   cursors = this.game.input.keyboard.createCursorKeys();
 
-  this.game.camera.follow(jugador.spriteCoche, Phaser.Camera.FOLLOW_LOCKON, 0.1, 0.1);
+  this.game.camera.follow(jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
 },
 
 update: function() {
-  //ESTO DEBE SER UNA FUNCION DE VEHICULO QUE LO LLAME TANTO JUGADOR COMO ENEMY 
-  relentizar=false;
-  if(!relentizar)
-  {
-    jugador.MaxVelocity=300;
-    jugador.MinVelocity=-150;
-  }
-  this.game.physics.arcade.overlap(jugador.spriteCoche,this.sprite,
-    function()
-    {
-      relentizar=true;
-      jugador.MaxVelocity=60;
-      jugador.MinVelocity=-60;
-    }
-    ,null,this);
-
+//UPDATE DE MOVIMIENTO
  jugador.update(cursors, this.game);
- enemy.update(this.game, banderas);
+ enemy.update(this.game, this.banderas);
+
+//UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
+ jugador.detectaCharco(this.game, charco.sprite);
+ enemy.detectaCharco(this.game, charco.sprite);
+
 },
 
 render: function() {
