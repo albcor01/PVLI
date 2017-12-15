@@ -19,9 +19,9 @@ var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacal
 {
   this.game = game
   this.velocity = 0;
-  this.acceleration = 10;
-  this.MaxVelocity = 900;
-  this.MinVelocity =-200;  
+  this.acceleration = 5;
+  this.MaxVelocity = 100;
+  this.MinVelocity =-100;  
   this.alive = true;
  
   gameObject.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY);
@@ -52,7 +52,6 @@ enemigo.prototype.constructor = enemigo;
 //UPDATE ENEMIGO, SIGUE BANDERAS
 enemigo.prototype.update = function(game, point)
 {
-  
   var targetAngle = game.physics.arcade.angleBetween(this.sprite, point[this.currentFlag]);
 
   if(this.sprite.rotation !== targetAngle)
@@ -84,25 +83,35 @@ enemigo.prototype.update = function(game, point)
   game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
 }
 
+//console.log(this.sprite.body.x);
+//console.log(point[this.currentFlag].x);
+/*if((this.sprite.body.x <= point[this.currentFlag].x + 1 && this.sprite.body.x <= point[this.currentFlag].x - 1)
+    && (this.sprite.body.y <= point[this.currentFlag].y + 1 && this.sprite.body.y <= point[this.currentFlag].y - 1))
+{
+  console.log(this.currentFlag);
+  if(this.currentFlag >= point.length-1)
+  this.currentFlag = 0;
+  else
+  this.currentFlag++;
+}*/
+
+
 this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
   function()
   {
-    if(this.currentFlag >= 5)
+    if(this.currentFlag >= point.length-1)
     this.currentFlag = 0;
     else
     this.currentFlag++;
     
   }
   ,null,this);
-
-
-
 }
 
 //UPDATE PLAYER, DETECTA IMPUTS
  player.prototype.update = function(cursors,game)
 {
-console.log(this.velocity);
+
   if(this.velocity!=0)
   {
   if(cursors.left.isDown){ this.sprite.angle -= 2; }
