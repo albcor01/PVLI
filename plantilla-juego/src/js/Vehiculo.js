@@ -79,9 +79,7 @@ enemigo.prototype.update = function(game, point)
   if(this.velocity < this.MaxVelocity)
   this.velocity += this.acceleration;
 
-{
   game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
-}
 
 //console.log(this.sprite.body.x);
 //console.log(point[this.currentFlag].x);
@@ -109,7 +107,7 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
 }
 
 //UPDATE PLAYER, DETECTA IMPUTS
- player.prototype.update = function(cursors,game)
+ player.prototype.update = function(cursors,game,charco)
 {
 
   if(this.velocity!=0)
@@ -142,17 +140,14 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
   {
     this.velocity+=this.acceleration;
   } 
-
-  { 
+ 
     game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
-  }
+  
 };
 
 vehicle.prototype.detectaCharco = function(game, charco)
 {
-  
-  //game.debug.body(charco);
-  //game.debug.body(this.sprite);
+
   this.relentizar=false;
   if(!this.relentizar)
   {
@@ -167,8 +162,32 @@ vehicle.prototype.detectaCharco = function(game, charco)
       this.MinVelocity = -60;
     },
      null, this);
-}
+};
 
+vehicle.prototype.muerte=function(game,agujero)
+{
+game.physics.arcade.collide(this.sprite,agujero,
+
+  function()
+  {
+    this.sprite.kill();
+    game.time.events.add(Phaser.Timer.SECOND*1.5,
+    
+    function()
+    {
+      this.sprite.reset(5500,5000);
+    },
+  this)
+  },
+null,this);
+};
+
+vehicle.prototype.crearCollide=function(game)
+{
+  if((this.sprite.angle>135 && this.sprite.angle<225) || (this.sprite.angle>315 && this.sprite.angle<360) ||(this.sprite.angle>0 && this.sprite.angle<45))
+  this.sprite.body.setSize(240,100,5,65); 
+  else this.sprite.body.setSize(100,240,80,5);
+};
   module.exports=
   {
     gameObject,

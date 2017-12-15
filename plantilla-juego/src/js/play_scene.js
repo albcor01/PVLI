@@ -3,24 +3,11 @@
 
 var GO = require('./Vehiculo.js');
 
-
-var cursors;
-var jugador;
-var charco;
-var enemy;
-var relentizar;
-
 var PlayScene=
 {
 
 preload: function() {
-    this.game.load.tilemap('level1', '../images/levels/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
-    this.load.text('level', '../images/levels/Mapa2.json');
-    this.game.load.image('Caminos', '../images/levels/spritesheet.png');
-    this.game.load.image('road', '../images/carreteras.jpg');
-    this.game.load.image('car', '../images/vehiculos/truck.png');
-    this.game.load.image('charco','images/charco.png');
-    this.game.load.image('bandera','images/banderita.png');
+  
 },
 
 create: function() {
@@ -39,7 +26,9 @@ create: function() {
   this.layer2 = this.map.createLayer('puntos');
   this.layer.resizeWorld();
   
-  
+  //Agujero
+  this.agujero=new GO.gameObject(this.game,'agujero',5500,4200,0.5,0.5,0.5,0.5);
+  this.agujero.sprite.body.setSize(500,500,100,100);
  //Pongo una banderita para hacer una prueba de movimiento (ESTO SE QUITARÁ)
   this.puntos = this.levelData.layers[1].objects.length;
   this.banderas = [];
@@ -54,26 +43,33 @@ create: function() {
   console.log(this.banderas.length);
 
   //creamos obstaculos
-  charco = new GO.gameObject(this.game, 'charco', 100, 100, 0, 0, 0.15, 0.6);
+  this.charco = new GO.gameObject(this.game, 'charco', 100, 100, 0, 0, 0.15, 0.6);
 
   //creamos al personajes
-  jugador = new GO.player(this.game, 'car', 5500, 5000, 0.5, 0.5, 0.5, 0.5);
-  enemy = new GO.enemigo(this.game, 4, 'car', 5500, 5000, 0.5, 0.5, 0.5, 0.5);
+  this.jugador = new GO.player(this.game, 'car', 5500, 5000, 0.5, 0.5, 0.5, 0.5);
+  this.enemy = new GO.enemigo(this.game, 4, 'car', 5500, 5000, 0.5, 0.5, 0.5, 0.5);
 
-  //inicializamos en cursors la deteccion de cursores
-  cursors = this.game.input.keyboard.createCursorKeys();
-
-  this.game.camera.follow(jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
+  //inicializamos en this.cursors la deteccion de cursores
+  this.cursors = this.game.input.keyboard.createCursorKeys();
+  
 },
 
 update: function() {
 //UPDATE DE MOVIMIENTO
- jugador.update(cursors, this.game);
- enemy.update(this.game, this.banderas);
+ this.jugador.update(this.cursors, this.game);
+ this.enemy.update(this.game, this.banderas);
 
 //UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
- jugador.detectaCharco(this.game, charco.sprite);
- enemy.detectaCharco(this.game, charco.sprite);
+ this.jugador.detectaCharco(this.game, this.charco.sprite);
+ this.enemy.detectaCharco(this.game, this.charco.sprite);
+ this.jugador.muerte(this.game,this.agujero.sprite);
+ this.enemy.muerte(this.game,this.agujero.sprite);
+this.jugador.crearCollide(this.game);
+
+
+ if(this.jugador.sprite.alive)
+ this.game.camera.follow(this.jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
+ else this.game.camera.follow(this.enemy.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
 
 },
 

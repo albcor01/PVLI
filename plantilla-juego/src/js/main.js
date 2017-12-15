@@ -23,6 +23,14 @@
 
       // TODO: load here the assets for the game
       this.game.load.image('logo', 'images/phaser.png');
+      this.game.load.tilemap('level1', '../images/levels/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
+      this.load.text('level', '../images/levels/Mapa2.json');
+      this.game.load.image('Caminos', '../images/levels/spritesheet.png');
+      this.game.load.image('road', '../images/carreteras.jpg');
+      this.game.load.image('car', '../images/vehiculos/truck.png');
+      this.game.load.image('charco','images/charco.png');
+      this.game.load.image('bandera','images/banderita.png');
+      this.game.load.image('agujero','images/AGUJERO.png');
     },
 
     create: function () {
