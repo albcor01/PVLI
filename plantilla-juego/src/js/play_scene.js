@@ -14,15 +14,16 @@ var PlayScene=
 {
 
   preload: function() {
-    this.game.load.baseURL = 'https://raw.githubusercontent.com/albcor01/PVLI/ElementsMapa/plantilla-juego/src/';
+    this.game.load.baseURL = 'https://raw.githubusercontent.com/albcor01/PVLI/gh-pages/plantilla-juego/src/';
     this.game.load.crossOrigin = 'anonymous';
   
   
-      this.game.load.tilemap('level1', 'images/levels/Mapa2.json', null, Phaser.Tilemap.TILED_JSON);
-      this.load.text('level', 'images/levels/Mapa2.json');
-      this.game.load.image('Caminos', 'images/levels/spritesheet.png');
+      this.game.load.tilemap('level1', 'images/levels/micromachinesMap.json', null, Phaser.Tilemap.TILED_JSON);
+      this.load.text('level', 'images/levels/micromachinesMap.json');
+      this.game.load.image('MicroMachines2-GG-TreehouseTiles', 'images/levels/MicroMachines2-GG-TreehouseTiles.png');
       this.game.load.image('road', 'images/carreteras.jpg');
-      this.game.load.image('car', 'images/vehiculos/truck.png');
+      this.game.load.image('car', 'images/vehiculos/coche.png');
+      this.game.load.image('carEnemy', 'images/vehiculos/cocheEnemy.png');
       this.game.load.image('charco','images/charco.png');
       this.game.load.image('bandera','images/banderita.png');
   },
@@ -38,9 +39,8 @@ create: function() {
   //this.game.add.tileSprite(0,0, 5000, 5000, 'road');
 
   this.map = this.game.add.tilemap('level1');
-  this.map.addTilesetImage('Caminos');
-  this.layer = this.map.createLayer('Suelo');
-  this.layer2 = this.map.createLayer('puntos');
+  this.map.addTilesetImage('MicroMachines2-GG-TreehouseTiles');
+  this.layer = this.map.createLayer('Floor');
   this.layer.resizeWorld();
   
   
@@ -61,8 +61,8 @@ create: function() {
   charco = new GO.gameObject(this.game, 'charco', 100, 100, 0, 0, 0.15, 0.6);
 
   //creamos al personajes
-  jugador = new GO.player(this.game, 'car', 5500, 5000, 0.5, 0.5, 0.5, 0.5);
-  enemy = new GO.enemigo(this.game, 2, 'car', 5500, 5000, 0.5, 0.5, 0.5, 0.5);
+  jugador = new GO.player(this.game, 'car', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5);
+  enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5);
 
   //inicializamos en cursors la deteccion de cursores
   cursors = this.game.input.keyboard.createCursorKeys();

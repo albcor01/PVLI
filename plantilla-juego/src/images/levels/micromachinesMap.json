@@ -190,8 +190,44 @@
          "width":200,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":200,
+         "name":"respawns",
+         "objects":[
+                {
+                 "gid":1333,
+                 "height":32,
+                 "id":15,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1569.33333333333,
+                 "y":2879.33333333333
+                }, 
+                {
+                 "gid":1333,
+                 "height":32,
+                 "id":16,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":1663.33333333333,
+                 "y":2879.33333333333
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":200,
+         "x":0,
+         "y":0
         }],
- "nextobjectid":15,
+ "nextobjectid":17,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tileheight":32,
