@@ -32,6 +32,7 @@ create: function() {
 
   this.levelData = JSON.parse(this.game.cache.getText('level'));
   console.log(this.levelData.layers[1].objects[0].x);
+  console.log(this.levelData.layers[2].objects[0].y);
   
   //Iniciamos las fisicas de arcade
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -62,12 +63,12 @@ create: function() {
 
   //creamos al personajes
   jugador = new GO.player(this.game, 'car', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5);
-  enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5);
+  enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[1].x, this.levelData.layers[2].objects[1].y, 0.5, 0.5, 0.5, 0.5);
 
   //inicializamos en cursors la deteccion de cursores
   cursors = this.game.input.keyboard.createCursorKeys();
 
-  this.game.camera.follow(enemy.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
+  this.game.camera.follow(jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
 },
 
 update: function() {
@@ -79,10 +80,10 @@ update: function() {
  jugador.detectaCharco(this.game, charco.sprite);
  enemy.detectaCharco(this.game, charco.sprite);
 
- for(var i = 0; i < this.puntos; i++)
+ /*for(var i = 0; i < this.puntos; i++)
  {
    this.game.debug.body(this.banderas[i]);
- }
+ }*/
 
 },
 
