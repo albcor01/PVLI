@@ -44,6 +44,7 @@ var enemigo=function(game, turnRate, sprite, posX, posY, anchorX, anchorY, scale
   this.currentFlag = 0;
   this.turnRate = turnRate;
   this.game = game;
+  this.aimOnFlag = false;
   vehicle.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY);
 };
 enemigo.prototype = Object.create(vehicle.prototype);
@@ -52,12 +53,25 @@ enemigo.prototype.constructor = enemigo;
 //UPDATE ENEMIGO, SIGUE BANDERAS
 enemigo.prototype.update = function(game, point)
 {
+  console.log(this.turnRate); 
+  //factor conversor de radianes a grados
+  var radianToDegreesFactor = 180 / Math.PI;
+  //PARA EVITAR QUE EL VEHICULO VIBRE POR LAS PEQUEÑAS DIFERENCIAS DE ÁNGULO
+  //HACEMOS QUE SOLO CALCULE EL ANGULO PARA GIRAR CUANDO EL VEHICULO
+  //NO ESTÉ ENFILANDO LA BANDERA, EN CUYO CASO ESTE SE MOVERÁ HACIA ADELANTE
+  //PARA ALCANZARLA
+  if(!this.aimOnFlag){
+    this.temp = this.MaxVelocity
+    this.MaxVelocity = this.MaxVelocity/3;
+//calculo angulo entre coche y bandera
   var targetAngle = game.physics.arcade.angleBetween(this.sprite, point[this.currentFlag]);
+//comprobamos angulo para aplicar el giro
 
   if(this.sprite.rotation !== targetAngle)
   {
     var delta = targetAngle - this.sprite.rotation;
 
+  console.log(delta * radianToDegreesFactor)
     if(delta > Math.PI) delta -= Math.PI * 2;
     if(delta < -Math.PI) delta += Math.PI * 2;
 
@@ -76,26 +90,26 @@ enemigo.prototype.update = function(game, point)
     }
   }
 
-  if(this.velocity < this.MaxVelocity)
+  if(delta * radianToDegreesFactor < 2 && delta * radianToDegreesFactor > -2){
+  this.aimOnFlag = true;
+  console.log("he entrado"); 
+ }
+
+}
+else
+{
+  this.MaxVelocity = this.temp;
+}
+
+if(this.velocity < this.MaxVelocity){
   this.velocity += this.acceleration;
+  } else { this.velocity -= this.acceleration-1; }
+  
 
 {
   game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
 }
-
-//console.log(this.sprite.body.x);
-//console.log(point[this.currentFlag].x);
-/*if((this.sprite.body.x <= point[this.currentFlag].x + 1 && this.sprite.body.x <= point[this.currentFlag].x - 1)
-    && (this.sprite.body.y <= point[this.currentFlag].y + 1 && this.sprite.body.y <= point[this.currentFlag].y - 1))
-{
-  console.log(this.currentFlag);
-  if(this.currentFlag >= point.length-1)
-  this.currentFlag = 0;
-  else
-  this.currentFlag++;
-}*/
-
-
+//al llegar a una bandera se pasará a la siguiente
 this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
   function()
   {
@@ -104,6 +118,7 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
     else
     this.currentFlag++;
     
+    this.aimOnFlag = false;
   }
   ,null,this);
 }

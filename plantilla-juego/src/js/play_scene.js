@@ -53,7 +53,7 @@ create: function() {
   {
     this.banderas.push(this.game.add.sprite(this.levelData.layers[1].objects[i].x, this.levelData.layers[1].objects[i].y));
     this.game.physics.enable(this.banderas[i],Phaser.Physics.ARCADE);
-    this.banderas[i].scale.setTo(0.1, 0.1);
+    this.banderas[i].body.setSize(100, 100, -50, -50);
   }
   console.log(this.banderas.length);
 
@@ -62,12 +62,12 @@ create: function() {
 
   //creamos al personajes
   jugador = new GO.player(this.game, 'car', 5500, 5000, 0.5, 0.5, 0.5, 0.5);
-  enemy = new GO.enemigo(this.game, 4, 'car', 5500, 5000, 0.5, 0.5, 0.5, 0.5);
+  enemy = new GO.enemigo(this.game, 2, 'car', 5500, 5000, 0.5, 0.5, 0.5, 0.5);
 
   //inicializamos en cursors la deteccion de cursores
   cursors = this.game.input.keyboard.createCursorKeys();
 
-  this.game.camera.follow(jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
+  this.game.camera.follow(enemy.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
 },
 
 update: function() {
@@ -78,6 +78,11 @@ update: function() {
 //UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
  jugador.detectaCharco(this.game, charco.sprite);
  enemy.detectaCharco(this.game, charco.sprite);
+
+ for(var i = 0; i < this.puntos; i++)
+ {
+   this.game.debug.body(this.banderas[i]);
+ }
 
 },
 
