@@ -44,6 +44,8 @@ create: function() {
 
   //creamos obstaculos
   this.charco = new GO.gameObject(this.game, 'charco', 100, 100, 0, 0, 0.15, 0.6);
+  this.aceite=new GO.gameObject(this.game,'aceite',5500,3700,0.5,0.5,0.25,0.5);
+  this.aceite.sprite.body.setSize(600,600,150,50);
 
   //creamos al personajes
   this.jugador = new GO.player(this.game, 'car', 5500, 5000, 0.5, 0.5, 0.5, 0.5);
@@ -64,8 +66,9 @@ update: function() {
  this.enemy.detectaCharco(this.game, this.charco.sprite);
  this.jugador.muerte(this.game,this.agujero.sprite);
  this.enemy.muerte(this.game,this.agujero.sprite);
-this.jugador.crearCollide(this.game);
-
+ this.jugador.crearCollide(this.game);
+ this.jugador.Patinar(this.game,this.aceite.sprite);
+ //this.enemy.ASAJI(this.game,this.aceite.sprite);
 
  if(this.jugador.sprite.alive)
  this.game.camera.follow(this.jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);

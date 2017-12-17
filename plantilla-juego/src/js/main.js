@@ -31,6 +31,7 @@
       this.game.load.image('charco','images/charco.png');
       this.game.load.image('bandera','images/banderita.png');
       this.game.load.image('agujero','images/AGUJERO.png');
+      this.game.load.image('aceite','images/SPRITEACEITE.png');
     },
 
     create: function () {

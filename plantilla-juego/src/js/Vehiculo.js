@@ -8,7 +8,7 @@ var gameObject = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sa
   this.sprite.scale.setTo(scaleX, sacaleY);
   game.physics.enable(this.sprite,Phaser.Physics.ARCADE);
   
-  this.sprite.body.immovable = true;
+  this.sprite.body.immovable = false;
   this.sprite.body.colliderWorldBounds = true;
   this.sprite.body.bounce.setTo(1, 1);
   this.sprite.allowRotation = true;
@@ -17,6 +17,7 @@ var gameObject = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sa
 //CONSTRUCOTRA DE VEHICULOS
 var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY)
 {
+  this.deslizar=false;
   this.game = game
   this.velocity = 0;
   this.acceleration = 5;
@@ -140,10 +141,33 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
   {
     this.velocity+=this.acceleration;
   } 
- 
+  if(!this.deslizar)
     game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
-  
+  else game.physics.arcade.accelerationFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.acceleration);
 };
+
+vehicle.prototype.detectaCoche=function(sprite,game,enemigoSprite,enemigo,jugador)
+{
+  game.physics.arcade.collide(sprite,enemigoSprite,
+    
+    function()
+    {
+      if(jugador.velocity>700)
+      {
+      enemigo.deslizar=true;
+      enemigo.velocity=60;
+      this.game.time.events.add(Phaser.Timer.SECOND,
+      function()
+      {
+        enemigo.deslizar=false;
+        jugador.deslizar=false;
+      }
+      ,this)
+     }
+  }
+    
+    ,null,this);
+}
 
 vehicle.prototype.detectaCharco = function(game, charco)
 {
@@ -170,6 +194,7 @@ game.physics.arcade.collide(this.sprite,agujero,
 
   function()
   {
+    this.velocity = 0;
     this.sprite.kill();
     game.time.events.add(Phaser.Timer.SECOND*1.5,
     
@@ -187,6 +212,20 @@ vehicle.prototype.crearCollide=function(game)
   if((this.sprite.angle>135 && this.sprite.angle<225) || (this.sprite.angle>315 && this.sprite.angle<360) ||(this.sprite.angle>0 && this.sprite.angle<45))
   this.sprite.body.setSize(240,100,5,65); 
   else this.sprite.body.setSize(100,240,80,5);
+};
+
+vehicle.prototype.Patinar=function(game,aceite)
+{
+
+this.deslizar=false;
+  game.physics.arcade.overlap(this.sprite,aceite,
+
+    function()
+    {
+      this.deslizar=true;
+    } 
+    ,null,this);
+
 };
   module.exports=
   {
