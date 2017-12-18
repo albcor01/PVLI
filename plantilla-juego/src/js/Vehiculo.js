@@ -21,8 +21,8 @@ var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacal
   this.game = game
   this.velocity = 0;
   this.acceleration = 5;
-  this.MaxVelocity = 100;
-  this.MinVelocity =-100;  
+  this.MaxVelocity = 900;
+  this.MinVelocity =-200;  
   this.alive = true;
 
  
@@ -55,7 +55,7 @@ enemigo.prototype.constructor = enemigo;
 //UPDATE ENEMIGO, SIGUE BANDERAS
 enemigo.prototype.update = function(game, point)
 {
-  console.log(this.turnRate); 
+
   //factor conversor de radianes a grados
   var radianToDegreesFactor = 180 / Math.PI;
   //PARA EVITAR QUE EL VEHICULO VIBRE POR LAS PEQUEÑAS DIFERENCIAS DE ÁNGULO
@@ -73,7 +73,7 @@ enemigo.prototype.update = function(game, point)
   {
     var delta = targetAngle - this.sprite.rotation;
 
-  console.log(delta * radianToDegreesFactor)
+  
     if(delta > Math.PI) delta -= Math.PI * 2;
     if(delta < -Math.PI) delta += Math.PI * 2;
 
@@ -125,8 +125,7 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
   ,null,this);
 }
 
-//UPDATE PLAYER, DETECTA IMPUTS
- player.prototype.update = function(cursors,game)
+player.prototype.update = function(cursors,game,charco)
 {
 
   if(this.velocity!=0)
@@ -159,10 +158,9 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
   {
     this.velocity+=this.acceleration;
   } 
-
-  { 
+  if(!this.deslizar)
     game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
-  }
+  else game.physics.arcade.accelerationFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.acceleration);
 };
 
 vehicle.prototype.detectaCharco = function(game, charco)
@@ -185,6 +183,65 @@ vehicle.prototype.detectaCharco = function(game, charco)
     },
      null, this);
 }
+
+vehicle.prototype.detectaCoche=function(sprite,game,enemigoSprite,enemigo,jugador)
+{
+  game.physics.arcade.collide(sprite,enemigoSprite,
+    
+    function()
+    {
+      if(jugador.velocity>700)
+      {
+      enemigo.deslizar=true;
+      enemigo.velocity=60;
+      this.game.time.events.add(Phaser.Timer.SECOND,
+      function()
+      {
+        enemigo.deslizar=false;
+        jugador.deslizar=false;
+      }
+      ,this)
+     }
+  }
+    
+    ,null,this);
+}
+
+vehicle.prototype.muerte=function(game,agujero, x, y)
+{
+game.physics.arcade.collide(this.sprite,agujero,
+
+  function()
+  {
+    this.velocity = 0;
+    this.sprite.kill();
+    game.time.events.add(Phaser.Timer.SECOND*1.5,
+    
+    function()
+    {
+      this.sprite.reset(x, y);
+      console.log(x);
+    },
+  this)
+  },
+null,this);
+};
+
+
+vehicle.prototype.Patinar=function(game,aceite)
+{
+
+this.deslizar=false;
+  game.physics.arcade.overlap(this.sprite,aceite,
+
+    function()
+    {
+      this.deslizar=true;
+    } 
+    ,null,this);
+
+};
+
 
   module.exports=
   {

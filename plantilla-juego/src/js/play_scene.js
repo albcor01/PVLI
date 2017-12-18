@@ -4,12 +4,6 @@
 var GO = require('./Vehiculo.js');
 
 
-var cursors;
-var jugador;
-var charco;
-var enemy;
-var relentizar;
-
 var PlayScene=
 {
 
@@ -26,13 +20,14 @@ var PlayScene=
       this.game.load.image('carEnemy', 'images/vehiculos/cocheEnemy.png');
       this.game.load.image('charco','images/charco.png');
       this.game.load.image('bandera','images/banderita.png');
+      this.game.load.image('agujero','images/buhero.png');
+      this.game.load.image('aceite','images/aceite.png');
   },
 
 create: function() {
 
   this.levelData = JSON.parse(this.game.cache.getText('level'));
-  console.log(this.levelData.layers[1].objects[0].x);
-  console.log(this.levelData.layers[2].objects[0].y);
+ 
   
   //Iniciamos las fisicas de arcade
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -43,12 +38,21 @@ create: function() {
   this.map.addTilesetImage('MicroMachines2-GG-TreehouseTiles');
   this.layer = this.map.createLayer('Floor');
   this.layer.resizeWorld();
-  
-  
+
+//creamos obstaculos
+  //Agujero
+  this.agujero=new GO.gameObject(this.game,'agujero',this.levelData.layers[2].objects[0].x + 500, this.levelData.layers[2].objects[0].y+500,0.5,0.5,0.5,0.5);
+  this.agujero.sprite.body.setSize(400,400,50,50);
+  //aceite
+  this.aceite=new GO.gameObject(this.game,'aceite',this.levelData.layers[2].objects[0].x + 600, this.levelData.layers[2].objects[0].y,0.5,0.5,0.25,0.5);
+  this.aceite.sprite.body.setSize(1000,300,-200,200);
+  //charco
+  this.charco = new GO.gameObject(this.game, 'charco', this.levelData.layers[2].objects[0].x + 700, this.levelData.layers[2].objects[0].y-500, 0, 0, 0.15, 0.6);
+  this.charco.sprite.body.setSize(420, 170, 200, -170);
  //Pongo una banderita para hacer una prueba de movimiento (ESTO SE QUITARÁ)
   this.puntos = this.levelData.layers[1].objects.length;
   this.banderas = [];
-  console.log(this.puntos);
+
   
   for(var i = 0; i < this.puntos; i++)
   {
@@ -56,36 +60,36 @@ create: function() {
     this.game.physics.enable(this.banderas[i],Phaser.Physics.ARCADE);
     this.banderas[i].body.setSize(100, 100, -50, -50);
   }
-  console.log(this.banderas.length);
+  //console.log(this.banderas.length);
 
-  //creamos obstaculos
-  charco = new GO.gameObject(this.game, 'charco', 100, 100, 0, 0, 0.15, 0.6);
-
+ 
   //creamos al personajes
-  jugador = new GO.player(this.game, 'car', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5);
-  enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[1].x, this.levelData.layers[2].objects[1].y, 0.5, 0.5, 0.5, 0.5);
+  this.jugador = new GO.player(this.game, 'car', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5);
+  this.enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[1].x, this.levelData.layers[2].objects[1].y, 0.5, 0.5, 0.5, 0.5);
 
   //inicializamos en cursors la deteccion de cursores
-  cursors = this.game.input.keyboard.createCursorKeys();
+  this.cursors = this.game.input.keyboard.createCursorKeys();
 
-  this.game.camera.follow(jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
+  //this.game.camera.follow(jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
 },
 
 update: function() {
-//UPDATE DE MOVIMIENTO
- jugador.update(cursors, this.game);
- enemy.update(this.game, this.banderas);
-
-//UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
- jugador.detectaCharco(this.game, charco.sprite);
- enemy.detectaCharco(this.game, charco.sprite);
-
- /*for(var i = 0; i < this.puntos; i++)
- {
-   this.game.debug.body(this.banderas[i]);
- }*/
-
-},
+  //UPDATE DE MOVIMIENTO
+   this.jugador.update(this.cursors, this.game);
+   this.enemy.update(this.game, this.banderas);
+  
+  //UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
+   this.jugador.detectaCharco(this.game, this.charco.sprite);
+   this.enemy.detectaCharco(this.game, this.charco.sprite);
+   this.jugador.muerte(this.game,this.agujero.sprite, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y);
+   this.enemy.muerte(this.game,this.agujero.sprite, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y);
+   this.jugador.Patinar(this.game,this.aceite.sprite);
+   //this.enemy.ASAJI(this.game,this.aceite.sprite);
+  
+   if(this.jugador.sprite.alive)
+   this.game.camera.follow(this.jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
+   else this.game.camera.follow(this.enemy.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
+  },
 
 render: function() {
 }
