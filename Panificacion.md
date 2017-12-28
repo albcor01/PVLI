@@ -21,7 +21,7 @@ Tenemos hasta el 19/1/18 para realizar la entrega, El objetivo es terminar el ju
   </tr>
   
   <tr>
-    <td>27/12/17</td>
+    <td>27/11/17</td>
     <td>Preparar presentación</td> 
     <td>preparar presentación</td>
   </tr>
@@ -64,7 +64,7 @@ Tenemos hasta el 19/1/18 para realizar la entrega, El objetivo es terminar el ju
 </tr>
 	
 <tr>
-	<td>8/12/17</td>
+	<td>8/1/17</td>
 	<td>Arreglar fallos</td> 
 	<td>Arreglar fallos</td>
 </tr>
@@ -87,6 +87,6 @@ Como jugador y enemigo me deslizo si piso sobre un objeto que resbala
 Tercer Hito
 power up de bala que congela
 Como vehiculo y enemigo muero si caigo del mapa
-Como juego necesito un menu
+Como juego necesito un menú
 Como juego necesito un panel de victoria o derrota
 como juego necesito un canvas para conocer el estado de la partida
