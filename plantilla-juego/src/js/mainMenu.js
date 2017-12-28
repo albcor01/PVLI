@@ -1,8 +1,11 @@
 'use strict';
-
+var audio = require('./AudioSrc.js')
 var mainMenu = 
 {
     create: function(){
+        console.log("hols");
+        audio.playMenuSong(this.game);
+
         this.button = this.game.add.button(300, 315, 'playButton', function startGame()
         {
             this.game.state.start('play');

@@ -1,4 +1,22 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+'use strict';
+
+//MUSIC
+var playMenuSong = function(game){
+    console.log("hola");
+    this.audio = game.add.audio('mainS');
+    this.audio.play();
+};
+var playRaceSong = function(game){
+
+};
+
+module.exports = 
+{
+    playMenuSong,
+    playRaceSong,
+}
+},{}],2:[function(require,module,exports){
 
 //CONSTRUCTORA DE ELEMENTOS DEL MAPA
 var gameObject = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY)
@@ -252,7 +270,7 @@ this.deslizar=false;
     enemigo,
   }
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
   'use strict';
 
   var PlayScene = require('./play_scene.js');
@@ -291,9 +309,9 @@ this.deslizar=false;
         this.game.load.image('playButton', 'images/play.jpg');
         
     //CARGA DE AUDIO
-        this.game.load.audio('race','music/raceTheme.ogg');
-        this.game.load.audio('race','music/mainTheme.ogg');
-        this.game.load.audio('race','music/winTheme.ogg');
+        this.game.load.audio('raceS','music/raceTheme.ogg');
+        this.game.load.audio('mainS','music/mainTheme.ogg');
+        this.game.load.audio('winS','music/winTheme.ogg');
         
     },
 
@@ -313,12 +331,15 @@ this.deslizar=false;
     game.state.start('boot');
   };
 
-},{"./Vehiculo.js":1,"./mainMenu.js":3,"./play_scene.js":4}],3:[function(require,module,exports){
+},{"./Vehiculo.js":2,"./mainMenu.js":4,"./play_scene.js":5}],4:[function(require,module,exports){
 'use strict';
-
+var audio = require('./AudioSrc.js')
 var mainMenu = 
 {
     create: function(){
+        console.log("hols");
+        audio.playMenuSong(this.game);
+
         this.button = this.game.add.button(300, 315, 'playButton', function startGame()
         {
             this.game.state.start('play');
@@ -330,7 +351,7 @@ var mainMenu =
 }
 
 module.exports = mainMenu;
-},{}],4:[function(require,module,exports){
+},{"./AudioSrc.js":1}],5:[function(require,module,exports){
 'use strict';
 //VEHICULOS
 
@@ -411,4 +432,4 @@ render: function() {
 };
 
 module.exports = PlayScene;
-},{"./Vehiculo.js":1}]},{},[2]);
+},{"./Vehiculo.js":2}]},{},[3]);
