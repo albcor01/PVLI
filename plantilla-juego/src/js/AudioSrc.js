@@ -2,13 +2,8 @@
 
 //MUSIC
 var playRaceSong = function(game){
+    this.audio = game.add.audio('mainS');
+};
+var playMenuSong = function(game){
 
 };
-var mainTheme;
-var winTheme;
-//Sound effects
-var hit;
-var explosion;
-var clic;
-var wait;
-var startRace;

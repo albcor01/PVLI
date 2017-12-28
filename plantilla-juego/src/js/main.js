@@ -36,9 +36,9 @@
         this.game.load.image('playButton', 'images/play.jpg');
         
     //CARGA DE AUDIO
-        this.game.load.audio('race','music/raceTheme.ogg');
-        this.game.load.audio('race','music/mainTheme.ogg');
-        this.game.load.audio('race','music/winTheme.ogg');
+        this.game.load.audio('raceS','music/raceTheme.ogg');
+        this.game.load.audio('mainS','music/mainTheme.ogg');
+        this.game.load.audio('winS','music/winTheme.ogg');
         
     },
 
