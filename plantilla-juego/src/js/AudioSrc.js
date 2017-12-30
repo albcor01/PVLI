@@ -36,9 +36,49 @@ var playClickSound = function(game){
     click = game.add.audio('Bclick');
     click.play();
 
-    playRaceSong.Stop = function()
+    playClickSound.Stop = function()
     {
         click.stop();
+    };
+};
+
+var playCollisionSound = function(game){
+    colision = game.add.audio('collision');
+    colision.play();
+
+    playCollisionSound.Stop = function()
+    {
+        colision.stop();
+    };
+};
+
+var playExplosionSound = function(game){
+    explosion = game.add.audio('explosion');
+    explosion.play();
+
+    playExplosionSound.Stop = function()
+    {
+        explosion.stop();
+    };
+};
+
+var playPitidoSalidaSound = function(game){
+    pitidoSalida = game.add.audio('exit');
+    pitidoSalida.play();
+
+    playPitidoSalidaSound.Stop = function()
+    {
+        pitidoSalida.stop();
+    };
+};
+
+var playPitidoSound = function(game){
+    pitido = game.add.audio('wait');
+    pitido.play();
+
+    playPitidoSound.Stop = function()
+    {
+        pitido.stop();
     };
 };
 
@@ -47,4 +87,8 @@ module.exports =
     playMenuSong,
     playRaceSong,
     playClickSound,
+    playCollisionSound,
+    playExplosionSound,
+    playPitidoSalidaSound,
+    playPitidoSound,
 }
