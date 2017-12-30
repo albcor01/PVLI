@@ -32,6 +32,7 @@
         this.game.load.image('bandera','images/banderita.png');
         this.game.load.image('agujero','images/buhero.png');
         this.game.load.image('aceite','images/aceite.png');
+        this.game.load.image('bullet','images/bala.png');
         this.game.load.image('menu', 'images/menu.jpg');
         this.game.load.image('playButton', 'images/play.jpg');
         

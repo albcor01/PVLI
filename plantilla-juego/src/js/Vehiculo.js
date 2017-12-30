@@ -125,7 +125,7 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
   ,null,this);
 }
 
-player.prototype.update = function(cursors,game,charco)
+player.prototype.update = function(cursors,game,firebutton,weapon)
 {
 
   if(this.velocity!=0)
@@ -158,9 +158,17 @@ player.prototype.update = function(cursors,game,charco)
   {
     this.velocity+=this.acceleration;
   } 
+
+  if(firebutton.downDuration(1))
+  {
+    weapon.fire();
+    console.log("pwnwbid");
+  }
   if(!this.deslizar)
     game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
   else game.physics.arcade.accelerationFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.acceleration);
+
+  game.world.wrap(this.sprite, 16);
 };
 
 vehicle.prototype.detectaCharco = function(game, charco)

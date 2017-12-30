@@ -143,7 +143,7 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
   ,null,this);
 }
 
-player.prototype.update = function(cursors,game,charco)
+player.prototype.update = function(cursors,game,firebutton,weapon)
 {
 
   if(this.velocity!=0)
@@ -176,9 +176,17 @@ player.prototype.update = function(cursors,game,charco)
   {
     this.velocity+=this.acceleration;
   } 
+
+  if(firebutton.downDuration(1))
+  {
+    weapon.fire();
+    console.log("pwnwbid");
+  }
   if(!this.deslizar)
     game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
   else game.physics.arcade.accelerationFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.acceleration);
+
+  game.world.wrap(this.sprite, 16);
 };
 
 vehicle.prototype.detectaCharco = function(game, charco)
@@ -304,6 +312,7 @@ this.deslizar=false;
         this.game.load.image('bandera','images/banderita.png');
         this.game.load.image('agujero','images/buhero.png');
         this.game.load.image('aceite','images/aceite.png');
+        this.game.load.image('bullet','images/bala.png');
         this.game.load.image('menu', 'images/menu.jpg');
         this.game.load.image('playButton', 'images/play.jpg');
         
@@ -373,7 +382,7 @@ create: function() {
   this.map.addTilesetImage('MicroMachines2-GG-TreehouseTiles');
   this.layer = this.map.createLayer('Floor');
   this.layer.resizeWorld();
-
+  this.Numbalas=0;
 //creamos obstaculos
   //Agujero
   this.agujero=new GO.gameObject(this.game,'agujero',this.levelData.layers[2].objects[0].x + 500, this.levelData.layers[2].objects[0].y+500,0.5,0.5,0.5,0.5);
@@ -401,16 +410,23 @@ create: function() {
   //creamos al personajes
   this.jugador = new GO.player(this.game, 'car', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5);
   this.enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[1].x, this.levelData.layers[2].objects[1].y, 0.5, 0.5, 0.5, 0.5);
-
   //inicializamos en cursors la deteccion de cursores
   this.cursors = this.game.input.keyboard.createCursorKeys();
 
+  //Creamos un arma
+  this.weapon=this.game.add.weapon(this.Numbalas,'bullet');
+  this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+  this.weapon.bulletSpeed = 400;
+  this.weapon.fireRate=1000;
+  this.weapon.trackSprite(this.jugador.sprite,0,0,true);
+//Creamos un boton para el disparo
+  this.fireButton=this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
   //this.game.camera.follow(jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
 },
 
 update: function() {
   //UPDATE DE MOVIMIENTO
-   this.jugador.update(this.cursors, this.game);
+   this.jugador.update(this.cursors, this.game,this.fireButton,this.weapon);
    this.enemy.update(this.game, this.banderas);
   
   //UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
