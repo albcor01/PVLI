@@ -2,13 +2,14 @@
 //VEHICULOS
 
 var GO = require('./Vehiculo.js');
+var audio = require('./AudioSrc.js');
 
 
 var PlayScene=
 {
 
 create: function() {
-
+  audio.playRaceSong(this.game);
   this.levelData = JSON.parse(this.game.cache.getText('level'));
  
   //Iniciamos las fisicas de arcade

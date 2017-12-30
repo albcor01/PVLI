@@ -8,6 +8,8 @@ var mainMenu =
 
         this.button = this.game.add.button(300, 315, 'playButton', function startGame()
         {
+            audio.playMenuSong.Stop();
+            audio.playClickSound(this.game);
             this.game.state.start('play');
         },
          this, 2, 1, 0);

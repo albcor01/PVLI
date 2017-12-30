@@ -1,19 +1,53 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
+var menu;
+var carrera1;
+var victoria;
+
+var click;
+var colision;
+var pitido;
+var pitidoSalida;
+var explosion;
+
 //MUSIC
 var playMenuSong = function(game){
-    this.audio = game.add.audio('mainS');
-    this.audio.play();
-};
-var playRaceSong = function(game){
+    menu = game.add.audio('mainS');
+    menu.play();
 
+    playMenuSong.Stop = function()
+    {
+        menu.stop();
+    };
+};
+
+
+var playRaceSong = function(game){
+    carrera1 = game.add.audio('raceS');
+    carrera1.play();
+    carrera1.volume -= 0.8;
+    playRaceSong.Stop = function()
+    {
+        carrera1.stop();
+    };
+};
+
+var playClickSound = function(game){
+    click = game.add.audio('Bclick');
+    click.play();
+
+    playRaceSong.Stop = function()
+    {
+        click.stop();
+    };
 };
 
 module.exports = 
 {
     playMenuSong,
     playRaceSong,
+    playClickSound,
 }
 },{}],2:[function(require,module,exports){
 
@@ -321,6 +355,8 @@ this.deslizar=false;
         this.game.load.audio('mainS','music/mainTheme.ogg');
         this.game.load.audio('winS','music/winTheme.ogg');
         
+        this.game.load.audio('Bclick','sounds/buttonClick.ogg');
+        
     },
 
     create: function () {
@@ -350,6 +386,8 @@ var mainMenu =
 
         this.button = this.game.add.button(300, 315, 'playButton', function startGame()
         {
+            audio.playMenuSong.Stop();
+            audio.playClickSound(this.game);
             this.game.state.start('play');
         },
          this, 2, 1, 0);
@@ -364,13 +402,14 @@ module.exports = mainMenu;
 //VEHICULOS
 
 var GO = require('./Vehiculo.js');
+var audio = require('./AudioSrc.js');
 
 
 var PlayScene=
 {
 
 create: function() {
-
+  audio.playRaceSong(this.game);
   this.levelData = JSON.parse(this.game.cache.getText('level'));
  
   //Iniciamos las fisicas de arcade
@@ -447,4 +486,4 @@ render: function() {
 };
 
 module.exports = PlayScene;
-},{"./Vehiculo.js":2}]},{},[3]);
+},{"./AudioSrc.js":1,"./Vehiculo.js":2}]},{},[3]);

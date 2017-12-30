@@ -41,6 +41,8 @@
         this.game.load.audio('mainS','music/mainTheme.ogg');
         this.game.load.audio('winS','music/winTheme.ogg');
         
+        this.game.load.audio('Bclick','sounds/buttonClick.ogg');
+        
     },
 
     create: function () {
