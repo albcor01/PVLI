@@ -125,6 +125,25 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
   ,null,this);
 }
 
+enemigo.prototype.congelado=function(weapon,congelado,enemigoCongelado,enemigo)
+{
+ 
+  this.game.physics.arcade.collide(this.sprite,weapon.bullets,
+    function(bullet)
+    { 
+      //bullet.kill();
+     this.velocity=0;
+     this.acceleration=0;
+      this.game.time.events.add(Phaser.Timer.SECOND*1.5,
+        function()
+        {
+        this.acceleration=5;
+        }
+        ,this)
+    }
+    ,null,this);
+}
+
 player.prototype.update = function(cursors,game,firebutton,weapon)
 {
 

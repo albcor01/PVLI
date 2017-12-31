@@ -4,7 +4,6 @@
 var GO = require('./Vehiculo.js');
 var audio = require('./AudioSrc.js');
 
-
 var PlayScene=
 {
 
@@ -16,12 +15,12 @@ create: function() {
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
   //colocamos el fondo
   //this.game.add.tileSprite(0,0, 5000, 5000, 'road');
-
+  this.congelado=false;
   this.map = this.game.add.tilemap('level1');
   this.map.addTilesetImage('MicroMachines2-GG-TreehouseTiles');
   this.layer = this.map.createLayer('Floor');
   this.layer.resizeWorld();
-  this.Numbalas=0;
+  this.Numbalas=30;
 //creamos obstaculos
   //Agujero
   this.agujero=new GO.gameObject(this.game,'agujero',this.levelData.layers[2].objects[0].x + 500, this.levelData.layers[2].objects[0].y+500,0.5,0.5,0.5,0.5);
@@ -55,9 +54,8 @@ create: function() {
   //Creamos un arma
   this.weapon=this.game.add.weapon(this.Numbalas,'bullet');
   this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-  this.weapon.bulletSpeed = 400;
   this.weapon.fireRate=1000;
-  this.weapon.trackSprite(this.jugador.sprite,0,0,true);
+  this.weapon.trackSprite(this.jugador.sprite,30,0,true);
 //Creamos un boton para el disparo
   this.fireButton=this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
   //this.game.camera.follow(jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
@@ -65,7 +63,11 @@ create: function() {
 
 update: function() {
   //UPDATE DE MOVIMIENTO
+  console.log(this.Numbalas);
+  this.Numbalas--;
+  this.weapon.bulletSpeed =500+this.jugador.velocity;
    this.jugador.update(this.cursors, this.game,this.fireButton,this.weapon);
+   if(!this.congelado)
    this.enemy.update(this.game, this.banderas);
   
   //UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
@@ -73,8 +75,10 @@ update: function() {
    this.enemy.detectaCharco(this.game, this.charco.sprite);
    this.jugador.muerte(this.game,this.agujero.sprite, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y);
    this.enemy.muerte(this.game,this.agujero.sprite, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y);
+   this.enemy.congelado(this.weapon,this.congelado)
+   console.log(this.congelado);
    this.jugador.Patinar(this.game,this.aceite.sprite);
-  
+
    if(this.jugador.sprite.alive)
    this.game.camera.follow(this.jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
    else this.game.camera.follow(this.enemy.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
