@@ -99,8 +99,8 @@ create: function() {
   //EN SUS RESPECTIVOS ARRAYS
  /****************************************************************************/
   //creamos al personajes
-  this.jugador = new GO.player(this.game, 'car', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5);
-  this.enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[1].x, this.levelData.layers[2].objects[1].y, 0.5, 0.5, 0.5, 0.5);
+  this.jugador = new GO.player(this.game, 'car', this.levelData.layers[1].objects[1].x, this.levelData.layers[1].objects[1].y, 0.5, 0.5, 0.5, 0.5);
+  this.enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[1].objects[2].x, this.levelData.layers[1].objects[2].y, 0.5, 0.5, 0.5, 0.5);
   //inicializamos en cursors la deteccion de cursores
   this.cursors = this.game.input.keyboard.createCursorKeys();
 
