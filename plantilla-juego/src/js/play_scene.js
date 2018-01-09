@@ -28,7 +28,7 @@ create: function() {
   //o charcos que relentizan o resbalan 
   this.numHoles = this.levelData.layers[4].objects.length;
   this.numCharcos = this.levelData.layers[6].objects.length;
-  this.numResbala = this.levelData.layers[7].objects.length;
+  this.numResbala = this.levelData.layers[8].objects.length;
   this.charcos = [];
   this.holes = [];
   this.resbala = [];

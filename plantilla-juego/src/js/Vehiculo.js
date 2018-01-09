@@ -12,7 +12,6 @@ var gameObject = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sa
   this.sprite.body.colliderWorldBounds = true;
   this.sprite.body.bounce.setTo(1, 1);
   this.sprite.allowRotation = true;
-  this.sprite.angle += -90;
 }
 
 //CONSTRUCOTRA DE VEHICULOS
@@ -56,14 +55,14 @@ enemigo.prototype.constructor = enemigo;
 //UPDATE ENEMIGO, SIGUE BANDERAS
 enemigo.prototype.update = function(game, point)
 {
-  game.debug.body(point[this.currentFlag]);
+  //game.debug.body(point[this.currentFlag]); //CON ESTO VEO LA POSICION A LA QUE ME MUEVO COMO ENENMIGO
   //factor conversor de radianes a grados
   var radianToDegreesFactor = 180 / Math.PI;
   //PARA EVITAR QUE EL VEHICULO VIBRE POR LAS PEQUEÑAS DIFERENCIAS DE ÁNGULO
   //HACEMOS QUE SOLO CALCULE EL ANGULO PARA GIRAR CUANDO EL VEHICULO
   //NO ESTÉ ENFILANDO LA BANDERA, EN CUYO CASO ESTE SE MOVERÁ HACIA ADELANTE
   //PARA ALCANZARLA
-  console.log(this.aimOnFlag);
+  
   if(!this.aimOnFlag){
    // this.temp = this.MaxVelocity
     this.MaxVelocity = this.MaxVelocity/3;
