@@ -24,7 +24,7 @@
     //CARGA DEIMAGENES
         this.game.load.tilemap('level1', 'images/levels/Level1.json', null, Phaser.Tilemap.TILED_JSON);
         this.load.text('level', 'images/levels/Level1.json');
-        this.game.load.image('MicroMachines2-GG-TreehouseTiles', 'images/levels/MicroMachines2-GG-TreehouseTiles.png');
+        this.game.load.image('Carreteras', 'images/levels/MicroMachines2-GG-TreehouseTiles.png');
         this.game.load.image('road', 'images/carreteras.jpg');
         this.game.load.image('car', 'images/vehiculos/coche.png');
         this.game.load.image('carEnemy', 'images/vehiculos/cocheEnemy.png');

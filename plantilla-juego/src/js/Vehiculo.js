@@ -21,7 +21,8 @@ var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacal
   this.game = game
   this.velocity = 0;
   this.acceleration = 5;
-  this.MaxVelocity = 900;
+  this.currentMaxVelocity = 600;
+  this.MaxVelocity = 600;
   this.MinVelocity =-200;  
   this.alive = true;
 
@@ -55,18 +56,20 @@ enemigo.prototype.constructor = enemigo;
 //UPDATE ENEMIGO, SIGUE BANDERAS
 enemigo.prototype.update = function(game, point)
 {
-
+  game.debug.body(point[this.currentFlag]);
   //factor conversor de radianes a grados
   var radianToDegreesFactor = 180 / Math.PI;
   //PARA EVITAR QUE EL VEHICULO VIBRE POR LAS PEQUEÑAS DIFERENCIAS DE ÁNGULO
   //HACEMOS QUE SOLO CALCULE EL ANGULO PARA GIRAR CUANDO EL VEHICULO
   //NO ESTÉ ENFILANDO LA BANDERA, EN CUYO CASO ESTE SE MOVERÁ HACIA ADELANTE
   //PARA ALCANZARLA
+  console.log(this.aimOnFlag);
   if(!this.aimOnFlag){
-    this.temp = this.MaxVelocity
+   // this.temp = this.MaxVelocity
     this.MaxVelocity = this.MaxVelocity/3;
 //calculo angulo entre coche y bandera
   var targetAngle = game.physics.arcade.angleBetween(this.sprite, point[this.currentFlag]);
+ 
 //comprobamos angulo para aplicar el giro
 
   if(this.sprite.rotation !== targetAngle)
@@ -100,7 +103,7 @@ enemigo.prototype.update = function(game, point)
 }
 else
 {
-  this.MaxVelocity = this.temp;
+  this.MaxVelocity = this.currentMaxVelocity;
 }
 
 if(this.velocity < this.MaxVelocity){
@@ -197,7 +200,7 @@ vehicle.prototype.detectaCharco = function(game, charco)
   this.relentizar=false;
   if(!this.relentizar)
   {
-    this.MaxVelocity=900;
+    this.MaxVelocity=600;
     this.MinVelocity=-200;
   }
   game.physics.arcade.overlap(this.sprite, charco,
@@ -216,7 +219,7 @@ vehicle.prototype.detectaCoche=function(sprite,game,enemigoSprite,enemigo,jugado
     
     function()
     {
-      if(jugador.velocity>700)
+      if(jugador.velocity>400)
       {
       enemigo.deslizar=true;
       enemigo.velocity=60;
