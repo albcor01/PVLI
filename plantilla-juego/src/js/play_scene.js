@@ -116,7 +116,6 @@ create: function() {
 
 update: function() {
   //UPDATE DE MOVIMIENTO
-  console.log(this.Numbalas);
   this.Numbalas--;
   this.weapon.bulletSpeed =500+this.jugador.velocity;
    this.jugador.update(this.cursors, this.game,this.fireButton,this.weapon);

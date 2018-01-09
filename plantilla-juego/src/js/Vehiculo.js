@@ -181,7 +181,6 @@ player.prototype.update = function(cursors,game,firebutton,weapon)
   if(firebutton.downDuration(1))
   {
     weapon.fire();
-    console.log("pwnwbid");
   }
   if(!this.deslizar)
     game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
@@ -247,7 +246,6 @@ game.physics.arcade.collide(this.sprite,agujero,
     function()
     {
       this.sprite.reset(x, y);
-      console.log(x);
     },
   this)
   },

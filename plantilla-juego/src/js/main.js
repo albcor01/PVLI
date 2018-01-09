@@ -22,8 +22,8 @@
       this.game.load.crossOrigin = 'anonymous';
     
     //CARGA DEIMAGENES
-        this.game.load.tilemap('level1', 'images/levels/micromachinesMap.json', null, Phaser.Tilemap.TILED_JSON);
-        this.load.text('level', 'images/levels/micromachinesMap.json');
+        this.game.load.tilemap('level1', 'images/levels/Level1.json', null, Phaser.Tilemap.TILED_JSON);
+        this.load.text('level', 'images/levels/Level1.json');
         this.game.load.image('MicroMachines2-GG-TreehouseTiles', 'images/levels/MicroMachines2-GG-TreehouseTiles.png');
         this.game.load.image('road', 'images/carreteras.jpg');
         this.game.load.image('car', 'images/vehiculos/coche.png');
