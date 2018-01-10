@@ -106,7 +106,10 @@ create: function() {
   this.enemy3 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[7].objects[0].x, this.levelData.layers[7].objects[0].y, 0.5, 0.5, 0.5, 0.5);
   //inicializamos en cursors la deteccion de cursores
   this.cursors = this.game.input.keyboard.createCursorKeys();
-
+  this.enemies=this.game.add.group();
+  this.enemies.add(this.enemy.sprite);
+  this.enemies.add(this.enemy2.sprite);
+  this.enemies.add(this.enemy3.sprite);
   //Creamos un arma
   this.weapon=this.game.add.weapon(this.Numbalas,'bullet');
   this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
@@ -119,7 +122,6 @@ create: function() {
 
 update: function() {
   //UPDATE DE MOVIMIENTO
-  this.Numbalas--;
   this.weapon.bulletSpeed =500+this.jugador.velocity;
 
    this.jugador.update(this.cursors, this.game,this.fireButton,this.weapon);
@@ -127,6 +129,8 @@ update: function() {
    this.enemy.update(this.game, this.banderas);
    this.enemy2.update(this.game, this.banderas2);
    this.enemy3.update(this.game, this.banderas3);
+   
+  
 
    
   
@@ -138,7 +142,10 @@ update: function() {
    //this.jugador.muerte(this.game, this.agujero.sprite, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y);
    //this.enemy.muerte(this.game, this.agujero.sprite, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y);
   //enemigo congelado
-   //this.enemy.congelado(this.weapon,this.congelado)
+   this.jugador.detectaCoche(this.jugador.sprite,this.game,this.enemies,this.enemy,this.jugador);
+   this.enemy.congelado(this.weapon,this.congelado);
+   this.enemy2.congelado(this.weapon,this.congelado);
+   this.enemy3.congelado(this.weapon,this.congelado,'enemyCongelado' , 'carEnemy');
 
    //console.log(this.congelado);
   //jugador pisa resbala

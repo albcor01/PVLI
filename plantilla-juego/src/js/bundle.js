@@ -98,13 +98,14 @@ module.exports =
 //CONSTRUCTORA DE ELEMENTOS DEL MAPA
 var gameObject = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY)
 {
-  
+  this.disparar=true;
   this.sprite = game.add.sprite(posX, posY, sprite);
   this.sprite.anchor.set(anchorX, anchorY);
   this.sprite.scale.setTo(scaleX, sacaleY);
   game.physics.enable(this.sprite,Phaser.Physics.ARCADE);
   
-  this.sprite.body.immovable = true;
+  this.sprite.body.immovable = false;
+  this.sprite.body.mass=100;
   this.sprite.body.colliderWorldBounds = true;
   this.sprite.body.bounce.setTo(1, 1);
   this.sprite.allowRotation = true;
@@ -223,18 +224,18 @@ this.game.physics.arcade.overlap(this.sprite, point[this.currentFlag],
   ,null,this);
 }
 
-enemigo.prototype.congelado=function(weapon,congelado,enemigoCongelado,enemigo)
+enemigo.prototype.congelado=function(weapon,congelado)
 {
  
   this.game.physics.arcade.collide(this.sprite,weapon.bullets,
-    function(bullet)
+    function(sprite,bullet)
     { 
-      //bullet.kill();
+     bullet.kill();
      this.velocity=0;
      this.acceleration=0;
       this.game.time.events.add(Phaser.Timer.SECOND*1.5,
         function()
-        {
+        { 
         this.acceleration=5;
         }
         ,this)
@@ -276,9 +277,17 @@ player.prototype.update = function(cursors,game,firebutton,weapon)
     this.velocity+=this.acceleration;
   } 
 
-  if(firebutton.downDuration(1))
+  if(firebutton.downDuration(1)&&this.disparar)
   {
     weapon.fire();
+    this.disparar=false;
+    game.time.events.add(Phaser.Timer.SECOND*5,
+      
+      function()
+      {
+       this.disparar=true;
+      },
+    this)
   }
   if(!this.deslizar)
     game.physics.arcade.velocityFromRotation(this.sprite.rotation, this.velocity, this.sprite.body.velocity); 
@@ -308,25 +317,14 @@ vehicle.prototype.detectaCharco = function(game, charco)
      null, this);
 }
 
-vehicle.prototype.detectaCoche=function(sprite,game,enemigoSprite,enemigo,jugador)
+vehicle.prototype.detectaCoche=function(sprite,game,group)
 {
-  game.physics.arcade.collide(sprite,enemigoSprite,
+  game.physics.arcade.collide(sprite,group,
     
     function()
     {
-      if(jugador.velocity>400)
-      {
-      enemigo.deslizar=true;
-      enemigo.velocity=60;
-      this.game.time.events.add(Phaser.Timer.SECOND,
-      function()
-      {
-        enemigo.deslizar=false;
-        jugador.deslizar=false;
-      }
-      ,this)
-     }
-  }
+      
+    }
     
     ,null,this);
 }
@@ -569,7 +567,10 @@ create: function() {
   this.enemy3 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[7].objects[0].x, this.levelData.layers[7].objects[0].y, 0.5, 0.5, 0.5, 0.5);
   //inicializamos en cursors la deteccion de cursores
   this.cursors = this.game.input.keyboard.createCursorKeys();
-
+  this.enemies=this.game.add.group();
+  this.enemies.add(this.enemy.sprite);
+  this.enemies.add(this.enemy2.sprite);
+  this.enemies.add(this.enemy3.sprite);
   //Creamos un arma
   this.weapon=this.game.add.weapon(this.Numbalas,'bullet');
   this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
@@ -582,7 +583,6 @@ create: function() {
 
 update: function() {
   //UPDATE DE MOVIMIENTO
-  this.Numbalas--;
   this.weapon.bulletSpeed =500+this.jugador.velocity;
 
    this.jugador.update(this.cursors, this.game,this.fireButton,this.weapon);
@@ -590,6 +590,8 @@ update: function() {
    this.enemy.update(this.game, this.banderas);
    this.enemy2.update(this.game, this.banderas2);
    this.enemy3.update(this.game, this.banderas3);
+   
+  
 
    
   
@@ -601,7 +603,10 @@ update: function() {
    //this.jugador.muerte(this.game, this.agujero.sprite, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y);
    //this.enemy.muerte(this.game, this.agujero.sprite, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y);
   //enemigo congelado
-   //this.enemy.congelado(this.weapon,this.congelado)
+   this.jugador.detectaCoche(this.jugador.sprite,this.game,this.enemies,this.enemy,this.jugador);
+   this.enemy.congelado(this.weapon,this.congelado);
+   this.enemy2.congelado(this.weapon,this.congelado);
+   this.enemy3.congelado(this.weapon,this.congelado,'enemyCongelado' , 'carEnemy');
 
    //console.log(this.congelado);
   //jugador pisa resbala
