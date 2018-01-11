@@ -29,12 +29,15 @@ create: function() {
   this.numHoles = this.levelData.layers[4].objects.length;
   this.numCharcos = this.levelData.layers[6].objects.length;
   this.numResbala = this.levelData.layers[8].objects.length;
+  this.numColliders = this.levelData.layers[5].objects.length;
+  this.mapColliders = [];
   this.charcos = [];
   this.holes = [];
   this.resbala = [];
   this.holesGroup=this.game.add.physicsGroup();
   this.charcosGroup=this.game.add.physicsGroup();
   this.resbalaGroups=this.game.add.physicsGroup();
+  this.mapCollidersGroup = this.game.add.physicsGroup();
   
 
   for(var i = 0; i < this.numHoles; i++)
@@ -62,6 +65,15 @@ create: function() {
     this.resbala[i].body.setSize(this.levelData.layers[8].objects[i].width, this.levelData.layers[8].objects[i].height, 0, 0);
     this.resbala[i].body.immovable=true;
     this.resbalaGroups.add(this.resbala[i]);
+  }
+
+  for(var i = 0; i < this.numColliders; i++)
+  {
+    this.mapColliders.push(this.game.add.sprite(this.levelData.layers[5].objects[i].x, this.levelData.layers[5].objects[i].y));
+    this.game.physics.enable(this.mapColliders[i],Phaser.Physics.ARCADE);
+    this.mapColliders[i].body.setSize(this.levelData.layers[5].objects[i].width, this.levelData.layers[5].objects[i].height, 0, 0);
+    this.mapColliders[i].body.immovable=true;
+    this.mapCollidersGroup.add(this.mapColliders[i]);
   }
   //PARA RECORDAR COMO LO HACIA ANTES
   /*this.aceite=new GO.gameObject(this.game,'aceite',this.levelData.layers[2].objects[0].x + 600, this.levelData.layers[2].objects[0].y,0.5,0.5,0.25,0.5);
