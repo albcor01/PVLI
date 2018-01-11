@@ -156,7 +156,7 @@ update: function() {
    this.jugador.muerte(this.game, this.holesGroup, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y);
    this.jugador.detectaCharco(this.charcosGroup,this.game);
    this.jugador.Patinar(this.game,this.resbalaGroups);
-   
+   this.jugador.muro(this.mapCollidersGroup,this.game);
   //enemigo congelado
    this.jugador.detectaCoche(this.jugador.sprite,this.game,this.enemies,this.enemy,this.jugador);
    this.enemy.congelado(this.weapon,this.congelado);

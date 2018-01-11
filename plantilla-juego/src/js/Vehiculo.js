@@ -221,6 +221,18 @@ vehicle.prototype.detectaCharco = function(group,game)
      null, this);
 }
 
+vehicle.prototype.muro=function(group,game)
+{
+  game.physics.arcade.collide(this.sprite,group,
+    
+    function()
+    {
+      
+    }
+    
+    ,null,this);
+}
+
 vehicle.prototype.detectaCoche=function(sprite,game,group)
 {
   game.physics.arcade.collide(sprite,group,
@@ -253,11 +265,11 @@ null,this);
 };
 
 
-vehicle.prototype.Patinar=function(game,aceite)
+vehicle.prototype.Patinar=function(game,group)
 {
 
 this.deslizar=false;
-  game.physics.arcade.overlap(this.sprite,aceite,
+  game.physics.arcade.overlap(this.sprite,group   ,
 
     function()
     {
