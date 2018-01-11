@@ -200,7 +200,7 @@ player.prototype.update = function(cursors,game,firebutton,weapon)
   game.world.wrap(this.sprite, 16);
 };
 
-vehicle.prototype.detectaCharco = function(game, charco)
+vehicle.prototype.detectaCharco = function(group,game)
 {
   
   //game.debug.body(charco);
@@ -211,7 +211,7 @@ vehicle.prototype.detectaCharco = function(game, charco)
     this.MaxVelocity=600;
     this.MinVelocity=-200;
   }
-  game.physics.arcade.overlap(this.sprite, charco,
+  game.physics.arcade.overlap(this.sprite,group,
     function()
     {
       this.relentizar = true;

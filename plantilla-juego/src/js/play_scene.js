@@ -32,12 +32,18 @@ create: function() {
   this.charcos = [];
   this.holes = [];
   this.resbala = [];
+  this.holesGroup=this.game.add.physicsGroup();
+  this.charcosGroup=this.game.add.physicsGroup();
+  this.resbalaGroups=this.game.add.physicsGroup();
+  
 
   for(var i = 0; i < this.numHoles; i++)
   {
     this.holes.push(this.game.add.sprite(this.levelData.layers[4].objects[i].x, this.levelData.layers[4].objects[i].y));
     this.game.physics.enable(this.holes[i],Phaser.Physics.ARCADE);
     this.holes[i].body.setSize(this.levelData.layers[4].objects[i].width, this.levelData.layers[4].objects[i].height, 0, 0);
+    this.holes[i].body.immovable=true;
+    this.holesGroup.add(this.holes[i]);
   }
 
   for(var i = 0; i < this.numCharcos; i++)
@@ -45,6 +51,8 @@ create: function() {
     this.charcos.push(this.game.add.sprite(this.levelData.layers[6].objects[i].x, this.levelData.layers[6].objects[i].y));
     this.game.physics.enable(this.charcos[i],Phaser.Physics.ARCADE);
     this.charcos[i].body.setSize(this.levelData.layers[6].objects[i].width, this.levelData.layers[6].objects[i].height, 0, 0);
+    this.charcos[i].body.immovable=true;
+    this.charcosGroup.add(this.charcos[i]);
   }
 
   for(var i = 0; i < this.numResbala; i++)
@@ -52,8 +60,9 @@ create: function() {
     this.resbala.push(this.game.add.sprite(this.levelData.layers[8].objects[i].x, this.levelData.layers[8].objects[i].y));
     this.game.physics.enable(this.resbala[i],Phaser.Physics.ARCADE);
     this.resbala[i].body.setSize(this.levelData.layers[8].objects[i].width, this.levelData.layers[8].objects[i].height, 0, 0);
+    this.resbala[i].body.immovable=true;
+    this.resbalaGroups.add(this.resbala[i]);
   }
-
   //PARA RECORDAR COMO LO HACIA ANTES
   /*this.aceite=new GO.gameObject(this.game,'aceite',this.levelData.layers[2].objects[0].x + 600, this.levelData.layers[2].objects[0].y,0.5,0.5,0.25,0.5);
   this.aceite.sprite.body.setSize(1000,300,-200,200);*/
@@ -129,31 +138,19 @@ update: function() {
    this.enemy.update(this.game, this.banderas);
    this.enemy2.update(this.game, this.banderas2);
    this.enemy3.update(this.game, this.banderas3);
-   
-  
 
-   
-  
   //UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
-  //charco
-   //this.jugador.detectaCharco(this.game, this.charco.sprite);
-   //this.enemy.detectaCharco(this.game, this.charco.sprite);
-  //agujero
-   //this.jugador.muerte(this.game, this.agujero.sprite, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y);
-   //this.enemy.muerte(this.game, this.agujero.sprite, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y);
+ 
+   this.jugador.muerte(this.game, this.holesGroup, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y);
+   this.jugador.detectaCharco(this.charcosGroup,this.game);
+   this.jugador.Patinar(this.game,this.resbalaGroups);
+   
   //enemigo congelado
    this.jugador.detectaCoche(this.jugador.sprite,this.game,this.enemies,this.enemy,this.jugador);
    this.enemy.congelado(this.weapon,this.congelado);
    this.enemy2.congelado(this.weapon,this.congelado);
    this.enemy3.congelado(this.weapon,this.congelado,'enemyCongelado' , 'carEnemy');
 
-   //console.log(this.congelado);
-  //jugador pisa resbala
-   //this.jugador.Patinar(this.game,this.aceite.sprite);
-
-   //DEBUG
-   /****************/
-   
   // for(var i = 0; i < this.puntos; i++)
   //{
     // this.game.debug.body(this.banderas[i]);
