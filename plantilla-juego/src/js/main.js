@@ -35,7 +35,11 @@
         this.game.load.image('bullet','images/bala.png');
         this.game.load.image('menu', 'images/menu.jpg');
         this.game.load.image('playButton', 'images/play.jpg');
-        
+        this.game.load.image('laps','images/Hud/laps.png');
+        this.game.load.spritesheet('lapss','images/Hud/LapsCounter.png',55,55,55);
+        this.game.load.image('check','images/checkpoint.png');
+        this.game.load.spritesheet('casco','images/Hud/casco.png',87,120,2);
+        this.game.load.spritesheet('posiciones','images/Hud/pos.png',50,50);
     //CARGA DE AUDIO
         this.game.load.audio('raceS','music/raceTheme.ogg');
         this.game.load.audio('mainS','music/mainTheme.ogg');

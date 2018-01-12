@@ -18,6 +18,10 @@ var gameObject = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sa
 //CONSTRUCOTRA DE VEHICULOS
 var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY)
 {
+  this.contador=0;
+  this.able=true;
+  this.posicion=0;
+  this.numVueltas=0;
   this.game = game
   this.velocity = 0;
   this.acceleration = 5;
@@ -146,7 +150,66 @@ enemigo.prototype.congelado=function(weapon,congelado)
     }
     ,null,this);
 }
+vehicle.prototype.checks=function(game,checkpoint1,checkpoint2,checkpoint3,checkpoint4,contador)
+{
+  game.physics.arcade.overlap(this.sprite,checkpoint1,
+    
+    function()
+    {
+      if(this.contador==0) this.contador++;
+    }
+    ,null,this);
 
+  game.physics.arcade.overlap(this.sprite,checkpoint2,
+      
+     function()
+     {
+      if(this.contador==1) this.contador++;
+     }
+    ,null,this);
+
+   game.physics.arcade.overlap(this.sprite,checkpoint3,
+        
+     function()
+     {
+      if(this.contador==2) this.contador++;
+     }
+    ,null,this);
+
+  game.physics.arcade.overlap(this.sprite,checkpoint4,
+      
+    function()
+     {
+      if(this.contador==3) this.contador++;
+     }
+    ,null,this);
+    
+    
+
+}
+
+vehicle.prototype.sumarvuelta=function(game,checkpoint4)
+{
+  game.physics.arcade.overlap(this.sprite,checkpoint4,
+    
+    function()
+    {
+      if(this.able && this.contador==3)
+      {
+      this.numVueltas++;
+      this.able=false;
+      game.time.events.add(Phaser.Timer.SECOND*1.5,
+        
+        function()
+        {
+          this.able=true;
+        },
+      this)
+      }
+    }
+    
+    ,null,this);
+}
 player.prototype.update = function(cursors,game,firebutton,weapon)
 {
 
@@ -233,6 +296,7 @@ vehicle.prototype.muro=function(group,game)
     ,null,this);
 }
 
+
 vehicle.prototype.detectaCoche=function(sprite,game,group)
 {
   game.physics.arcade.collide(sprite,group,
@@ -245,7 +309,7 @@ vehicle.prototype.detectaCoche=function(sprite,game,group)
     ,null,this);
 }
 
-vehicle.prototype.muerte=function(game,agujero, x, y)
+vehicle.prototype.muerte=function(game,agujero,x,y,checkpoint1,checkpoint2,checkpoint3,checkpoint4)
 {
 game.physics.arcade.collide(this.sprite,agujero,
 
@@ -257,7 +321,10 @@ game.physics.arcade.collide(this.sprite,agujero,
     
     function()
     {
-      this.sprite.reset(x, y);
+      if(this.contador==1) this.sprite.reset(checkpoint1.x, checkpoint1.y);
+      else if (this.contador==2) this.sprite.reset(checkpoint2.x, checkpoint2.y);
+      else if (this.contador==3) this.sprite.reset(checkpoint3.x, checkpoint3.y);
+      else this.sprite.reset(x, y);
     },
   this)
   },

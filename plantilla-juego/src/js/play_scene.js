@@ -26,6 +26,7 @@ create: function() {
   /****************************************************************************/
   //Creamos un array de objetos que son obstaculos como elementos colisionables, agujeros
   //o charcos que relentizan o resbalan 
+  this.contador=2;
   this.numHoles = this.levelData.layers[4].objects.length;
   this.numCharcos = this.levelData.layers[6].objects.length;
   this.numResbala = this.levelData.layers[8].objects.length;
@@ -73,6 +74,7 @@ create: function() {
     this.game.physics.enable(this.mapColliders[i],Phaser.Physics.ARCADE);
     this.mapColliders[i].body.setSize(this.levelData.layers[5].objects[i].width, this.levelData.layers[5].objects[i].height, 0, 0);
     this.mapColliders[i].body.immovable=true;
+    //this.mapColliders[i].body.moves=false;
     this.mapCollidersGroup.add(this.mapColliders[i]);
   }
   //PARA RECORDAR COMO LO HACIA ANTES
@@ -125,6 +127,44 @@ create: function() {
   this.enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y, 0.5, 0.5, 0.5, 0.5);
   this.enemy2 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[3].objects[0].x, this.levelData.layers[3].objects[0].y, 0.5, 0.5, 0.5, 0.5);
   this.enemy3 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[7].objects[0].x, this.levelData.layers[7].objects[0].y, 0.5, 0.5, 0.5, 0.5);
+  this.lapsCounter=this.game.add.sprite( this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,'lapss',3);
+  this.lapsCounter.scale.setTo(0.8,0.8);
+  this.lapsCounter.fixedToCamera=true;
+  this.lapsCounter.cameraOffset.setTo(165, 30);
+ 
+  this.laps=this.game.add.sprite( this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,'laps');
+  this.laps.scale.setTo(0.7,0.7);
+  this.laps.fixedToCamera=true;
+  this.laps.cameraOffset.setTo(30, 30);
+  
+  //CHECKPOINTS
+  this.checkpoint1=this.game.add.sprite(this.levelData.layers[2].objects[0].x+1000,this.levelData.layers[2].objects[0].y-500,'check');
+  this.checkpoint1.scale.setTo(0.5,0.5);
+  this.checkpoint2=this.game.add.sprite(this.levelData.layers[2].objects[0].x+400,this.levelData.layers[2].objects[0].y-1100,'check');
+  this.checkpoint2.scale.setTo(0.5,0.5);
+  this.checkpoint3=this.game.add.sprite(this.levelData.layers[2].objects[0].x-100,this.levelData.layers[2].objects[0].y-1600,'check');
+  this.checkpoint3.scale.setTo(0.5,0.5);
+  this.checkpoint4=this.game.add.sprite(this.levelData.layers[2].objects[0].x+400,this.levelData.layers[2].objects[0].y-100,'check');
+  this.checkpoint4.scale.setTo(0.5,0.5);
+  
+  this.game.physics.enable([ this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4 ], Phaser.Physics.ARCADE);
+  this.checkpoint4.body.setSize(100,300);
+  this.checkpoint3.body.setSize(300,100);
+  this.checkpoint2.body.setSize(100,300);
+  this.checkpoint1.body.setSize(300,100);
+  //CASCO
+  this.casco=this.game.add.sprite(this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,'casco',2);
+  this.casco.scale.setTo(0.5,0.5);
+  this.casco.fixedToCamera=true;
+  this.casco.cameraOffset.setTo(30,85);
+  this.walk=this.casco.animations.add('walk');
+  this.casco.animations.play('walk',1,true); 
+  //POSICIONES
+  this.pos=this.game.add.sprite(this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,'posiciones',4);
+  this.pos.fixedToCamera=true;
+  this.pos.scale.setTo(0.7,0.7);
+  this.pos.cameraOffset.setTo(80,95);
+  
   //inicializamos en cursors la deteccion de cursores
   this.cursors = this.game.input.keyboard.createCursorKeys();
   this.enemies=this.game.add.group();
@@ -144,24 +184,47 @@ create: function() {
 update: function() {
   //UPDATE DE MOVIMIENTO
   this.weapon.bulletSpeed =500+this.jugador.velocity;
-
-   this.jugador.update(this.cursors, this.game,this.fireButton,this.weapon);
-  // if(!this.congelado)
-   this.enemy.update(this.game, this.banderas);
-   this.enemy2.update(this.game, this.banderas2);
-   this.enemy3.update(this.game, this.banderas3);
-
+  this.game.debug.body(this.checkpoint4);
+  this.game.debug.body(this.checkpoint3);
+  this.game.debug.body(this.checkpoint2);
+  this.game.debug.body(this.checkpoint1);
+  this.pos.frame=this.jugador.posicion;
+  this.lapsCounter.frame=this.contador;
+   
   //UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
- 
-   this.jugador.muerte(this.game, this.holesGroup, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y);
+
+  //JUGADOR
+   this.jugador.update(this.cursors, this.game,this.fireButton,this.weapon);
+   this.jugador.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador);
+   this.jugador.muerte(this.game, this.holesGroup, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,this.checkpoint1,
+   this.checkpoint1,this.checkpoint3,this.checkpoint4);
    this.jugador.detectaCharco(this.charcosGroup,this.game);
    this.jugador.Patinar(this.game,this.resbalaGroups);
    this.jugador.muro(this.mapCollidersGroup,this.game);
-  //enemigo congelado
    this.jugador.detectaCoche(this.jugador.sprite,this.game,this.enemies,this.enemy,this.jugador);
+   //ENEMIGOS
+   this.enemy.update(this.game, this.banderas);
+   this.enemy2.update(this.game, this.banderas2);
+   this.enemy3.update(this.game, this.banderas3);
    this.enemy.congelado(this.weapon,this.congelado);
    this.enemy2.congelado(this.weapon,this.congelado);
    this.enemy3.congelado(this.weapon,this.congelado,'enemyCongelado' , 'carEnemy');
+   this.enemy.sumarvuelta(this.game,this.checkpoint4);
+   this.enemy2.sumarvuelta(this.game,this.checkpoint4);
+   this.enemy3.sumarvuelta(this.game,this.checkpoint4);
+   this.enemy.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
+   this.enemy2.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
+   this.enemy3.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
+   //LOGS
+   console.log(this.contador);
+   
+    if(this.jugador.contador==4)
+    {
+      this.jugador.contador=0;
+      this.contador--;
+      this.jugador.numVueltas++;
+    }
+   
 
   // for(var i = 0; i < this.puntos; i++)
   //{
