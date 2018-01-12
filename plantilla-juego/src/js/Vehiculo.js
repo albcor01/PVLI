@@ -42,9 +42,11 @@ vehicle.prototype = Object.create(gameObject.prototype);
 vehicle.prototype.constructor = vehicle;
 
 //CONSTRUCTORA DE PLAYER
-var player=function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY)
+var player=function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY, cursors, fireButton, weapon)
 {
- 
+  this.cursors = cursors;
+  this.firebutton = fireButton;
+  this.weapon = weapon
   this.game = game;
   vehicle.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY);
 };
@@ -219,24 +221,24 @@ vehicle.prototype.sumarvuelta=function(game,checkpoint4)
     
     ,null,this);
 }
-player.prototype.update = function(cursors,firebutton,weapon)
+player.prototype.update = function()
 {
 
   if(this.velocity!=0)
   {
-  if(cursors.left.isDown){ this.angle -= 2; }
+  if(this.cursors.left.isDown){ this.angle -= 2; }
 
-  else if(cursors.right.isDown){ this.angle += 2; }
+  else if(this.cursors.right.isDown){ this.angle += 2; }
   }
 
-   if(cursors.up.isDown)
+   if(this.cursors.up.isDown)
   { 
     this.velocity += this.acceleration; 
 
     if(this.velocity > this.MaxVelocity)
     this.velocity = this.MaxVelocity;
   }
-  else if(cursors.down.isDown)
+  else if(this.cursors.down.isDown)
   { 
     this.velocity -= this.acceleration*3; 
 
@@ -253,9 +255,9 @@ player.prototype.update = function(cursors,firebutton,weapon)
     this.velocity+=this.acceleration;
   } 
 
-  if(firebutton.downDuration(1)&&this.disparar)
+  if(this.firebutton.downDuration(1)&&this.disparar)
   {
-    weapon.fire();
+    this.weapon.fire();
     this.disparar=false;
     this.game.time.events.add(Phaser.Timer.SECOND*5,
       
