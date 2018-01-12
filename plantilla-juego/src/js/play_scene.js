@@ -124,9 +124,9 @@ create: function() {
   //creamos al personajes
   this.jugador = new GO.player(this.game, 'car', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5);
   //CREAMOS A LOS ENEMIGOS, SERÍA MEJOR COMO UN ARRAY PERO PARA ESO ANTES TENDRÍA QUE ENTENDER MEJOR LOS JSON
-  this.enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y, 0.5, 0.5, 0.5, 0.5);
-  this.enemy2 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[3].objects[0].x, this.levelData.layers[3].objects[0].y, 0.5, 0.5, 0.5, 0.5);
-  this.enemy3 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[7].objects[0].x, this.levelData.layers[7].objects[0].y, 0.5, 0.5, 0.5, 0.5);
+  this.enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y, 0.5, 0.5, 0.5, 0.5, this.banderas);
+  this.enemy2 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[3].objects[0].x, this.levelData.layers[3].objects[0].y, 0.5, 0.5, 0.5, 0.5, this.banderas2);
+  this.enemy3 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[7].objects[0].x, this.levelData.layers[7].objects[0].y, 0.5, 0.5, 0.5, 0.5, this.banderas3);
   this.lapsCounter=this.game.add.sprite( this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,'lapss',3);
   this.lapsCounter.scale.setTo(0.8,0.8);
   this.lapsCounter.fixedToCamera=true;
@@ -168,17 +168,19 @@ create: function() {
   //inicializamos en cursors la deteccion de cursores
   this.cursors = this.game.input.keyboard.createCursorKeys();
   this.enemies=this.game.add.group();
-  this.enemies.add(this.enemy.sprite);
-  this.enemies.add(this.enemy2.sprite);
-  this.enemies.add(this.enemy3.sprite);
+  this.enemies.add(this.enemy);
+  this.enemies.add(this.enemy2);
+  this.enemies.add(this.enemy3);
   //Creamos un arma
   this.weapon=this.game.add.weapon(this.Numbalas,'bullet');
   this.weapon.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
   this.weapon.fireRate=1000;
-  this.weapon.trackSprite(this.jugador.sprite,30,0,true);
+  this.weapon.trackSprite(this.jugador,30,0,true);
 //Creamos un boton para el disparo
   this.fireButton=this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
   //this.game.camera.follow(jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
+  console.log(this.jugador);
+  console.log(this.enemy);
 },
 
 update: function() {
@@ -194,18 +196,16 @@ update: function() {
   //UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
 
   //JUGADOR
-   this.jugador.update(this.cursors, this.game,this.fireButton,this.weapon);
+  // this.jugador.update(this.cursors,this.fireButton,this.weapon);
    this.jugador.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador);
    this.jugador.muerte(this.game, this.holesGroup, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,this.checkpoint1,
    this.checkpoint1,this.checkpoint3,this.checkpoint4);
    this.jugador.detectaCharco(this.charcosGroup,this.game);
    this.jugador.Patinar(this.game,this.resbalaGroups);
    this.jugador.muro(this.mapCollidersGroup,this.game);
-   this.jugador.detectaCoche(this.jugador.sprite,this.game,this.enemies,this.enemy,this.jugador);
+   this.jugador.detectaCoche(this.jugador,this.game,this.enemies,this.enemy,this.jugador);
    //ENEMIGOS
-   this.enemy.update(this.game, this.banderas);
-   this.enemy2.update(this.game, this.banderas2);
-   this.enemy3.update(this.game, this.banderas3);
+
    this.enemy.congelado(this.weapon,this.congelado);
    this.enemy2.congelado(this.weapon,this.congelado);
    this.enemy3.congelado(this.weapon,this.congelado,'enemyCongelado' , 'carEnemy');
@@ -216,7 +216,7 @@ update: function() {
    this.enemy2.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
    this.enemy3.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
    //LOGS
-   console.log(this.contador);
+  // console.log(this.contador);
    
     if(this.jugador.contador==4)
     {
@@ -233,9 +233,12 @@ update: function() {
    
   /*****************/
   //ESTA PARTE DEL CÓDIGO DEFINE A QUIEN SIGUE LA CÁMARA EN FUNCIÓN DE SI EL JUGADOR HA CAIDO EN UN AGUJERO O NO
-   if(this.jugador.sprite.alive)
-   this.game.camera.follow(this.jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
-   else this.game.camera.follow(this.enemy.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
+  this.game.debug.body(this.jugador);
+  this.game.camera.x = this.jugador.x;
+  this.game.camera.y = this.jugador.y;
+   //if(this.jugador.alive)
+   //this.game.camera.follow(this.enemy, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
+   //else this.game.camera.follow(this.enemy, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
   },
 
 render: function() {
