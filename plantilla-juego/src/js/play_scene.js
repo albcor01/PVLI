@@ -151,7 +151,7 @@ create: function() {
   this.checkpoint4.body.setSize(100,300);
   this.checkpoint3.body.setSize(300,100);
   this.checkpoint2.body.setSize(100,300);
-  this.checkpoint1.body.setSize(300,100);
+  this.checkpoint1.body.setSize(400,100,-100);
   //CASCO
   this.casco=this.game.add.sprite(this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,'casco',2);
   this.casco.scale.setTo(0.5,0.5);
@@ -201,8 +201,6 @@ create: function() {
      this);
   this.timer.start();
   
-  console.log(this.jugador);
-  console.log(this.enemy);
 },
 
 update: function() {
@@ -220,7 +218,7 @@ update: function() {
 
   //JUGADOR
   
-   this.jugador.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador);
+   this.jugador.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador,this.enemies,this.jugador);
    this.jugador.muerte(this.game, this.holesGroup, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,this.checkpoint1,
    this.checkpoint1,this.checkpoint3,this.checkpoint4);
    this.jugador.detectaCharco(this.charcosGroup,this.game);
@@ -230,17 +228,18 @@ update: function() {
    
    //ENEMIGOS
 
-   this.enemy.congelado(this.weapon,this.congelado);
-   this.enemy2.congelado(this.weapon,this.congelado);
-   this.enemy3.congelado(this.weapon,this.congelado,'enemyCongelado' , 'carEnemy');
-   this.enemy.sumarvuelta(this.game,this.checkpoint4);
-   this.enemy2.sumarvuelta(this.game,this.checkpoint4);
-   this.enemy3.sumarvuelta(this.game,this.checkpoint4);
-   this.enemy.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
-   this.enemy2.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
-   this.enemy3.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
+for(var i=0;i<this.enemies.length;i++)
+{
+  this.enemies.children[i].congelado(this.weapon,this.congelado);
+  this.enemies.children[i].checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador,this.enemies,this.jugador);
+  if(this.enemies.children[i].contador===4)
+  {
+    this.enemies.children[i].contador=0;
+    this.enemies.children[i].numVueltas++;
+  }
+}
 
-   
+    // console.log(this.enemies.children[2].numVueltas);
     if(this.jugador.contador===4)
     {
       this.jugador.contador=0;
@@ -248,6 +247,8 @@ update: function() {
       this.jugador.numVueltas++;
     }
    
+  //CONSOLE LOG
+  //console.log(this.jugador.posicion);
 
   //ESTA PARTE DEL CÓDIGO DEFINE A QUIEN SIGUE LA CÁMARA EN FUNCIÓN DE SI EL JUGADOR HA CAIDO EN UN AGUJERO O NO
   

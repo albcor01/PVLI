@@ -111,7 +111,6 @@ var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacal
   
   this.contador=0;
   this.able=true;
-  this.posicion=0;
   this.numVueltas=0;
   this.game = game
   this.velocity = 0;
@@ -131,7 +130,7 @@ vehicle.prototype.constructor = vehicle;
 //CONSTRUCTORA DE PLAYER
 var player=function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY,cursors,firebutton,weapon)
 {
- 
+  this.posicion=3;
   this.game = game;
   this.cursors=cursors;
   this.firebutton=firebutton;
@@ -158,6 +157,7 @@ enemigo.prototype.constructor = enemigo;
 
 
 //UPDATE ENEMIGO, SIGUE BANDERAS
+
 enemigo.prototype.update = function()
 {
   if(this.CanMove){
@@ -253,13 +253,18 @@ enemigo.prototype.congelado=function(weapon,congelado)
     }
     ,null,this);
 }
-vehicle.prototype.checks=function(game,checkpoint1,checkpoint2,checkpoint3,checkpoint4,contador)
+vehicle.prototype.checks=function(game,checkpoint1,checkpoint2,checkpoint3,checkpoint4,contador,enemies,jugador)
 {
   game.physics.arcade.overlap(this,checkpoint1,
     
     function()
     {
-      if(this.contador==0) this.contador++;
+      if(this.contador==0) 
+      {
+        this.contador++;
+        
+      }
+      if(this===jugador) jugador.pos(enemies);
     }
     ,null,this);
 
@@ -267,7 +272,12 @@ vehicle.prototype.checks=function(game,checkpoint1,checkpoint2,checkpoint3,check
       
      function()
      {
-      if(this.contador==1) this.contador++;
+      if(this.contador==1)
+      {
+        this.contador++;
+        
+      }
+      if(this==jugador) jugador.pos(enemies);
      }
     ,null,this);
 
@@ -275,7 +285,12 @@ vehicle.prototype.checks=function(game,checkpoint1,checkpoint2,checkpoint3,check
         
      function()
      {
-      if(this.contador==2) this.contador++;
+      if(this.contador==2) 
+      {
+        this.contador++;
+        
+      }
+      if(this==jugador) jugador.pos(enemies);
      }
     ,null,this);
 
@@ -283,12 +298,15 @@ vehicle.prototype.checks=function(game,checkpoint1,checkpoint2,checkpoint3,check
       
     function()
      {
-      if(this.contador==3) this.contador++;
+      if(this.contador==3) 
+      {
+      this.contador++;
+     
+      }
+      if(this==jugador) jugador.pos(enemies);
      }
     ,null,this);
     
-    
-
 }
 
 vehicle.prototype.activateMovement=function()
@@ -317,6 +335,24 @@ vehicle.prototype.sumarvuelta=function(game,checkpoint4)
     }
     
     ,null,this);
+}
+
+player.prototype.pos=function(enemies)
+{
+  this.posicion=3;
+  /*
+  for(var i=0;i<enemies.length;i++)
+    if(this.numVueltas==enemies.children[i].numVueltas)
+      for(var i=0;i<enemies.length;i++)
+        if(this.contador>enemies.children[i].contador) this.posicion--;
+        else;
+    else if(this.numVueltas>enemies.children[i].numVueltas) this.posicion--   
+    */
+    for(var i=0;i<enemies.length;i++)
+    {
+    if(this.contador>enemies.children[i].contador&&this.numVueltas===enemies.children[i].numVueltas) this.posicion--;
+    else if(this.numVueltas>enemies.children[i].numVueltas)this.posicion--;
+    }
 }
 player.prototype.update = function()
 {
@@ -508,7 +544,7 @@ this.deslizar=false;
         this.game.load.spritesheet('lapss','images/Hud/LapsCounter.png',55,55,55);
         this.game.load.image('check','images/checkpoint.png');
         this.game.load.spritesheet('casco','images/Hud/casco.png',87,120,2);
-        this.game.load.spritesheet('posiciones','images/Hud/pos.png',50,50);
+        this.game.load.spritesheet('posiciones','images/Hud/pos.png',56,50);
     //CARGA DE AUDIO
         this.game.load.audio('raceS','music/raceTheme.ogg');
         this.game.load.audio('mainS','music/mainTheme.ogg');
@@ -713,7 +749,7 @@ create: function() {
   this.checkpoint4.body.setSize(100,300);
   this.checkpoint3.body.setSize(300,100);
   this.checkpoint2.body.setSize(100,300);
-  this.checkpoint1.body.setSize(300,100);
+  this.checkpoint1.body.setSize(400,100,-100);
   //CASCO
   this.casco=this.game.add.sprite(this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,'casco',2);
   this.casco.scale.setTo(0.5,0.5);
@@ -763,8 +799,6 @@ create: function() {
      this);
   this.timer.start();
   
-  console.log(this.jugador);
-  console.log(this.enemy);
 },
 
 update: function() {
@@ -782,7 +816,7 @@ update: function() {
 
   //JUGADOR
   
-   this.jugador.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador);
+   this.jugador.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador,this.enemies,this.jugador);
    this.jugador.muerte(this.game, this.holesGroup, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,this.checkpoint1,
    this.checkpoint1,this.checkpoint3,this.checkpoint4);
    this.jugador.detectaCharco(this.charcosGroup,this.game);
@@ -792,17 +826,18 @@ update: function() {
    
    //ENEMIGOS
 
-   this.enemy.congelado(this.weapon,this.congelado);
-   this.enemy2.congelado(this.weapon,this.congelado);
-   this.enemy3.congelado(this.weapon,this.congelado,'enemyCongelado' , 'carEnemy');
-   this.enemy.sumarvuelta(this.game,this.checkpoint4);
-   this.enemy2.sumarvuelta(this.game,this.checkpoint4);
-   this.enemy3.sumarvuelta(this.game,this.checkpoint4);
-   this.enemy.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
-   this.enemy2.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
-   this.enemy3.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
+for(var i=0;i<this.enemies.length;i++)
+{
+  this.enemies.children[i].congelado(this.weapon,this.congelado);
+  this.enemies.children[i].checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador,this.enemies,this.jugador);
+  if(this.enemies.children[i].contador===4)
+  {
+    this.enemies.children[i].contador=0;
+    this.enemies.children[i].numVueltas++;
+  }
+}
 
-   
+    // console.log(this.enemies.children[2].numVueltas);
     if(this.jugador.contador===4)
     {
       this.jugador.contador=0;
@@ -810,6 +845,8 @@ update: function() {
       this.jugador.numVueltas++;
     }
    
+  //CONSOLE LOG
+  //console.log(this.jugador.posicion);
 
   //ESTA PARTE DEL CÓDIGO DEFINE A QUIEN SIGUE LA CÁMARA EN FUNCIÓN DE SI EL JUGADOR HA CAIDO EN UN AGUJERO O NO
   
