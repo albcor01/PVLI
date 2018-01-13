@@ -24,10 +24,10 @@ create: function() {
   //Creamos un array de objetos que son obstaculos como elementos colisionables, agujeros
   //o charcos que relentizan o resbalan 
   this.contador=2;
-  this.numHoles = this.levelData.layers[4].objects.length;
-  this.numCharcos = this.levelData.layers[6].objects.length;
-  this.numResbala = this.levelData.layers[8].objects.length;
-  this.numColliders = this.levelData.layers[5].objects.length;
+  this.numHoles = this.levelData.layers[6].objects.length;
+  this.numCharcos = this.levelData.layers[8].objects.length;
+  this.numResbala = this.levelData.layers[10].objects.length;
+  this.numColliders = this.levelData.layers[7].objects.length;
   this.mapColliders = [];
   this.charcos = [];
   this.holes = [];
@@ -40,36 +40,36 @@ create: function() {
 
   for(var i = 0; i < this.numHoles; i++)
   {
-    this.holes.push(this.game.add.sprite(this.levelData.layers[4].objects[i].x, this.levelData.layers[4].objects[i].y));
+    this.holes.push(this.game.add.sprite(this.levelData.layers[6].objects[i].x, this.levelData.layers[6].objects[i].y));
     this.game.physics.enable(this.holes[i],Phaser.Physics.ARCADE);
-    this.holes[i].body.setSize(this.levelData.layers[4].objects[i].width, this.levelData.layers[4].objects[i].height, 0, 0);
+    this.holes[i].body.setSize(this.levelData.layers[6].objects[i].width, this.levelData.layers[6].objects[i].height, 0, 0);
     this.holes[i].body.immovable=true;
     this.holesGroup.add(this.holes[i]);
   }
 
   for(var i = 0; i < this.numCharcos; i++)
   {
-    this.charcos.push(this.game.add.sprite(this.levelData.layers[6].objects[i].x, this.levelData.layers[6].objects[i].y));
+    this.charcos.push(this.game.add.sprite(this.levelData.layers[8].objects[i].x, this.levelData.layers[8].objects[i].y));
     this.game.physics.enable(this.charcos[i],Phaser.Physics.ARCADE);
-    this.charcos[i].body.setSize(this.levelData.layers[6].objects[i].width, this.levelData.layers[6].objects[i].height, 0, 0);
+    this.charcos[i].body.setSize(this.levelData.layers[8].objects[i].width, this.levelData.layers[8].objects[i].height, 0, 0);
     this.charcos[i].body.immovable=true;
     this.charcosGroup.add(this.charcos[i]);
   }
 
   for(var i = 0; i < this.numResbala; i++)
   {
-    this.resbala.push(this.game.add.sprite(this.levelData.layers[8].objects[i].x, this.levelData.layers[8].objects[i].y));
+    this.resbala.push(this.game.add.sprite(this.levelData.layers[10].objects[i].x, this.levelData.layers[10].objects[i].y));
     this.game.physics.enable(this.resbala[i],Phaser.Physics.ARCADE);
-    this.resbala[i].body.setSize(this.levelData.layers[8].objects[i].width, this.levelData.layers[8].objects[i].height, 0, 0);
+    this.resbala[i].body.setSize(this.levelData.layers[10].objects[i].width, this.levelData.layers[10].objects[i].height, 0, 0);
     this.resbala[i].body.immovable=true;
     this.resbalaGroups.add(this.resbala[i]);
   }
 
   for(var i = 0; i < this.numColliders; i++)
   {
-    this.mapColliders.push(this.game.add.sprite(this.levelData.layers[5].objects[i].x, this.levelData.layers[5].objects[i].y));
+    this.mapColliders.push(this.game.add.sprite(this.levelData.layers[7].objects[i].x, this.levelData.layers[7].objects[i].y));
     this.game.physics.enable(this.mapColliders[i],Phaser.Physics.ARCADE);
-    this.mapColliders[i].body.setSize(this.levelData.layers[5].objects[i].width, this.levelData.layers[5].objects[i].height, 0, 0);
+    this.mapColliders[i].body.setSize(this.levelData.layers[7].objects[i].width, this.levelData.layers[7].objects[i].height, 0, 0);
     this.mapColliders[i].body.immovable=true;
     //this.mapColliders[i].body.moves=false;
     this.mapCollidersGroup.add(this.mapColliders[i]);
@@ -85,30 +85,30 @@ create: function() {
  //CREAMOS LOS ARRAYS QUE CONTENDRÁN EN ORDEN LAS BANDERAS 
  //LOS FOR POSTERIORES INTRODUCEN EN EL ARRAY LA POSICION DE LAS BANDERA
  //LEYENDO EL JSON DEL MAPA
-  this.puntos = this.levelData.layers[1].objects.length;
-  this.puntos2 = this.levelData.layers[3].objects.length;
-  this.puntos3 = this.levelData.layers[7].objects.length;
+  this.puntos = this.levelData.layers[4].objects.length;
+  this.puntos2 = this.levelData.layers[5].objects.length;
+  this.puntos3 = this.levelData.layers[9].objects.length;
   this.banderas = [];
   this.banderas2 = [];
   this.banderas3 = [];
   
   for(var i = 0; i < this.puntos; i++)
   {
-    this.banderas.push(this.game.add.sprite(this.levelData.layers[1].objects[i].x, this.levelData.layers[1].objects[i].y));
+    this.banderas.push(this.game.add.sprite(this.levelData.layers[4].objects[i].x, this.levelData.layers[4].objects[i].y));
     this.game.physics.enable(this.banderas[i],Phaser.Physics.ARCADE);
     this.banderas[i].body.setSize(140, 140, -50, -50);
   }
 
   for(var i = 0; i < this.puntos2; i++)
   {
-    this.banderas2.push(this.game.add.sprite(this.levelData.layers[3].objects[i].x, this.levelData.layers[3].objects[i].y));
+    this.banderas2.push(this.game.add.sprite(this.levelData.layers[5].objects[i].x, this.levelData.layers[5].objects[i].y));
     this.game.physics.enable(this.banderas2[i],Phaser.Physics.ARCADE);
     this.banderas2[i].body.setSize(140, 140, -50, -50);
   }
 
   for(var i = 0; i < this.puntos3; i++)
   {
-    this.banderas3.push(this.game.add.sprite(this.levelData.layers[7].objects[i].x, this.levelData.layers[7].objects[i].y));
+    this.banderas3.push(this.game.add.sprite(this.levelData.layers[9].objects[i].x, this.levelData.layers[9].objects[i].y));
     this.game.physics.enable(this.banderas3[i],Phaser.Physics.ARCADE);
     this.banderas3[i].body.setSize(140, 140, -50, -50);
   }
@@ -120,14 +120,14 @@ create: function() {
   this.cursors = this.game.input.keyboard.createCursorKeys();
   this.weapon=this.game.add.weapon(this.Numbalas,'bullet');
   this.fireButton=this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
-  this.jugador = new GO.player(this.game, 'car', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 
+  this.jugador = new GO.player(this.game, 'car', this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y, 
   0.5, 0.5, 0.5, 0.5,this.cursors,this.fireButton,this.weapon);
   this.game.world.addChild(this.jugador);
   //CREAMOS A LOS ENEMIGOS, SERÍA MEJOR COMO UN ARRAY PERO PARA ESO ANTES TENDRÍA QUE ENTENDER MEJOR LOS JSON
-  this.enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y, 0.5, 0.5, 0.5, 0.5, this.banderas);
-  this.enemy2 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[3].objects[0].x, this.levelData.layers[3].objects[0].y, 0.5, 0.5, 0.5, 0.5, this.banderas2);
-  this.enemy3 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[7].objects[0].x, this.levelData.layers[7].objects[0].y, 0.5, 0.5, 0.5, 0.5, this.banderas3);
-  this.lapsCounter=this.game.add.sprite( this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,'lapss',3);
+  this.enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5, this.banderas);
+  this.enemy2 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[1].x, this.levelData.layers[2].objects[1].y, 0.5, 0.5, 0.5, 0.5, this.banderas2);
+  this.enemy3 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[2].x, this.levelData.layers[2].objects[2].y, 0.5, 0.5, 0.5, 0.5, this.banderas3);
+  this.lapsCounter=this.game.add.sprite( this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y,'lapss',3);
   this.lapsCounter.scale.setTo(0.8,0.8);
   this.lapsCounter.fixedToCamera=true;
   this.lapsCounter.cameraOffset.setTo(165, 30);
@@ -153,14 +153,14 @@ create: function() {
   this.checkpoint2.body.setSize(100,300);
   this.checkpoint1.body.setSize(400,100,-100);
   //CASCO
-  this.casco=this.game.add.sprite(this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,'casco',2);
+  this.casco=this.game.add.sprite(this.levelData.layers[1].objects[0].x, this.levelData.layers[2].objects[0].y,'casco',2);
   this.casco.scale.setTo(0.5,0.5);
   this.casco.fixedToCamera=true;
   this.casco.cameraOffset.setTo(30,85);
   this.walk=this.casco.animations.add('walk');
   this.casco.animations.play('walk',1,true); 
   //POSICIONES
-  this.pos=this.game.add.sprite(this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,'posiciones',4);
+  this.pos=this.game.add.sprite(this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y,'posiciones',4);
   this.pos.fixedToCamera=true;
   this.pos.scale.setTo(0.7,0.7);
   this.pos.cameraOffset.setTo(80,95);
@@ -219,7 +219,7 @@ update: function() {
   //JUGADOR
   
    this.jugador.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador,this.enemies,this.jugador);
-   this.jugador.muerte(this.game, this.holesGroup, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,this.checkpoint1,
+   this.jugador.muerte(this.game, this.holesGroup, this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y,this.checkpoint1,
    this.checkpoint1,this.checkpoint3,this.checkpoint4);
    this.jugador.detectaCharco(this.charcosGroup,this.game);
    this.jugador.Patinar(this.game,this.resbalaGroups);
