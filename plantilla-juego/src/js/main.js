@@ -46,6 +46,9 @@
         this.game.load.audio('winS','music/winTheme.ogg');
         
         this.game.load.audio('Bclick','sounds/buttonClick.ogg');
+        this.game.load.audio('exit','sounds/SalidaSound.ogg');
+        this.game.load.audio('wait','sounds/waitSalidaSound.ogg');
+        
         
     },
 

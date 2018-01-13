@@ -65,21 +65,11 @@ var playExplosionSound = function(game){
 var playPitidoSalidaSound = function(game){
     pitidoSalida = game.add.audio('exit');
     pitidoSalida.play();
-
-    playPitidoSalidaSound.Stop = function()
-    {
-        pitidoSalida.stop();
-    };
 };
 
 var playPitidoSound = function(game){
     pitido = game.add.audio('wait');
     pitido.play();
-
-    playPitidoSound.Stop = function()
-    {
-        pitido.stop();
-    };
 };
 
 module.exports = 

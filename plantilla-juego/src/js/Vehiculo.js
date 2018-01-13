@@ -34,6 +34,7 @@ var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacal
   this.MaxVelocity = 600;
   this.MinVelocity =-200;  
   this.alive = true;
+  this.CanMove = false;
 
  
   gameObject.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY);
@@ -68,9 +69,12 @@ var enemigo=function(game, turnRate, sprite, posX, posY, anchorX, anchorY, scale
 enemigo.prototype = Object.create(vehicle.prototype);
 enemigo.prototype.constructor = enemigo;
 
+
+
 //UPDATE ENEMIGO, SIGUE BANDERAS
 enemigo.prototype.update = function()
 {
+  if(this.CanMove){
   //game.debug.body(point[this.currentFlag]); //CON ESTO VEO LA POSICION A LA QUE ME MUEVO COMO ENENMIGO
   //factor conversor de radianes a grados
   var radianToDegreesFactor = 180 / Math.PI;
@@ -143,6 +147,7 @@ this.game.physics.arcade.overlap(this, this.road[this.currentFlag],
   }
   ,null,this);
 }
+}
 
 enemigo.prototype.congelado=function(weapon,congelado)
 {
@@ -200,6 +205,11 @@ vehicle.prototype.checks=function(game,checkpoint1,checkpoint2,checkpoint3,check
 
 }
 
+vehicle.prototype.activateMovement=function()
+{
+  this.CanMove = true;
+}
+
 vehicle.prototype.sumarvuelta=function(game,checkpoint4)
 {
   game.physics.arcade.overlap(this,checkpoint4,
@@ -224,7 +234,7 @@ vehicle.prototype.sumarvuelta=function(game,checkpoint4)
 }
 player.prototype.update = function()
 {
-
+  if(this.CanMove){
   if(this.velocity!=0)
   {
   if(this.cursors.left.isDown){ this.angle -= 2; }
@@ -273,6 +283,7 @@ player.prototype.update = function()
   else this.game.physics.arcade.accelerationFromRotation(this.rotation, this.velocity, this.body.acceleration);
 
   this.game.world.wrap(this, 16);
+}
 };
 
 

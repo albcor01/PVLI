@@ -8,13 +8,10 @@ var PlayScene=
 {
 
 create: function() {
-  audio.playRaceSong(this.game);
+
   this.levelData = JSON.parse(this.game.cache.getText('level'));
  
-  //Iniciamos las fisicas de arcade
   this.game.physics.startSystem(Phaser.Physics.ARCADE);
-  //colocamos el fondo
-  //this.game.add.tileSprite(0,0, 5000, 5000, 'road');
   this.congelado=false;
   this.map = this.game.add.tilemap('level1');
   this.map.addTilesetImage('Carreteras');
@@ -77,9 +74,7 @@ create: function() {
     //this.mapColliders[i].body.moves=false;
     this.mapCollidersGroup.add(this.mapColliders[i]);
   }
-  //PARA RECORDAR COMO LO HACIA ANTES
-  /*this.aceite=new GO.gameObject(this.game,'aceite',this.levelData.layers[2].objects[0].x + 600, this.levelData.layers[2].objects[0].y,0.5,0.5,0.25,0.5);
-  this.aceite.sprite.body.setSize(1000,300,-200,200);*/
+
 
   //AQUÍ TERMINA LA CREACION DE OBSTACULOS
 /******************************************************************************/
@@ -117,7 +112,7 @@ create: function() {
     this.game.physics.enable(this.banderas3[i],Phaser.Physics.ARCADE);
     this.banderas3[i].body.setSize(140, 140, -50, -50);
   }
-  //console.log(this.banderas.length);
+
   //AQUÍ TERMINA LA INTRODUCCION DE LAS BANDERAS
   //EN SUS RESPECTIVOS ARRAYS
  /****************************************************************************/
@@ -182,13 +177,36 @@ create: function() {
   this.weapon.fireRate=1000;
   this.weapon.trackSprite(this.jugador,30,0,true);
 //Creamos un boton para el disparo
+
+  this.timeCounter = 0;
+  this.timer = this.game.time.create(false);
+  this.timer.loop(1000, 
+    function()
+    {
+      this.timeCounter++;
+      if(this.timeCounter >= 4)
+      {
+        audio.playPitidoSalidaSound(this.game);
+        audio.playRaceSong(this.game);
+        this.jugador.activateMovement();
+        for(var i = 0; i < this.enemies.length; i++)
+          { this.enemies.children[i].activateMovement(); }
+          this.timer.stop();
+      }
+      else
+      {
+        audio.playPitidoSound(this.game);
+      }
+    },
+     this);
+  this.timer.start();
   
-  //this.game.camera.follow(jugador.sprite, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
   console.log(this.jugador);
   console.log(this.enemy);
 },
 
 update: function() {
+
   //UPDATE DE MOVIMIENTO
   this.weapon.bulletSpeed =500+this.jugador.velocity;
   this.game.debug.body(this.checkpoint4);
@@ -201,7 +219,6 @@ update: function() {
   //UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
 
   //JUGADOR
-  // this.jugador.update(this.cursors,this.fireButton,this.weapon);
   
    this.jugador.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador);
    this.jugador.muerte(this.game, this.holesGroup, this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y,this.checkpoint1,
@@ -222,10 +239,9 @@ update: function() {
    this.enemy.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
    this.enemy2.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
    this.enemy3.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4);
-   //LOGS
-  // console.log(this.contador);
+
    
-    if(this.jugador.contador==4)
+    if(this.jugador.contador===4)
     {
       this.jugador.contador=0;
       this.contador--;
@@ -233,14 +249,8 @@ update: function() {
     }
    
 
-  // for(var i = 0; i < this.puntos; i++)
-  //{
-    // this.game.debug.body(this.banderas[i]);
-  //}
-   
-  /*****************/
   //ESTA PARTE DEL CÓDIGO DEFINE A QUIEN SIGUE LA CÁMARA EN FUNCIÓN DE SI EL JUGADOR HA CAIDO EN UN AGUJERO O NO
-  this.game.debug.body(this.jugador);
+  
    if(this.jugador.alive)
    this.game.camera.follow(this.jugador, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
    else this.game.camera.follow(this.enemy, Phaser.Camera.FOLLOW_LOCKON, 0.8, 0.8);
@@ -251,4 +261,7 @@ render: function() {
 
 };
 
+
+
 module.exports = PlayScene;
+  
