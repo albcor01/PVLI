@@ -48,6 +48,8 @@
         this.game.load.audio('Bclick','sounds/buttonClick.ogg');
         this.game.load.audio('exit','sounds/SalidaSound.ogg');
         this.game.load.audio('wait','sounds/waitSalidaSound.ogg');
+        this.game.load.audio('colision','sounds/Collision.ogg');
+        this.game.load.audio('engine','sounds/carEngine.ogg');
         
         
     },

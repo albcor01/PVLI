@@ -10,12 +10,13 @@ var colision;
 var pitido;
 var pitidoSalida;
 var explosion;
+var engine;
 
 //MUSIC
 var playMenuSong = function(game){
     menu = game.add.audio('mainS');
     menu.play();
-
+    menu.volume -= 0.6;
     playMenuSong.Stop = function()
     {
         menu.stop();
@@ -26,7 +27,7 @@ var playMenuSong = function(game){
 var playRaceSong = function(game){
     carrera1 = game.add.audio('raceS');
     carrera1.play();
-    carrera1.volume -= 0.8;
+    carrera1.volume -= 0.9;
     playRaceSong.Stop = function()
     {
         carrera1.stop();
@@ -44,13 +45,8 @@ var playClickSound = function(game){
 };
 
 var playCollisionSound = function(game){
-    colision = game.add.audio('collision');
+    colision = game.add.audio('colision');
     colision.play();
-
-    playCollisionSound.Stop = function()
-    {
-        colision.stop();
-    };
 };
 
 var playExplosionSound = function(game){
@@ -73,6 +69,17 @@ var playPitidoSound = function(game){
     pitido.play();
 };
 
+var playEngineSound = function(game){
+    engine = game.add.audio('engine');
+    engine.volume -= 0.98;
+    engine.play();
+
+    playEngineSound.Stop = function()
+    {
+        engine.stop();
+    };
+};
+
 module.exports = 
 {
     playMenuSong,
@@ -82,8 +89,11 @@ module.exports =
     playExplosionSound,
     playPitidoSalidaSound,
     playPitidoSound,
+    playEngineSound,
 }
 },{}],2:[function(require,module,exports){
+
+var audio = require('./AudioSrc.js');
 
 //CONSTRUCTORA DE ELEMENTOS DEL MAPA
 var gameObject = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY)
@@ -356,6 +366,7 @@ player.prototype.pos=function(enemies)
 }
 player.prototype.update = function()
 {
+  
   if(this.CanMove){
   if(this.velocity!=0)
   {
@@ -366,6 +377,9 @@ player.prototype.update = function()
 
    if(this.cursors.up.isDown)
   { 
+    if(!audio.isPlaying){
+    audio.playEngineSound(this.game);
+    }
     this.velocity += this.acceleration; 
 
     if(this.velocity > this.MaxVelocity)
@@ -387,6 +401,8 @@ player.prototype.update = function()
   {
     this.velocity+=this.acceleration;
   } 
+
+
 
   if(this.firebutton.downDuration(1)&&this.disparar)
   {
@@ -437,7 +453,9 @@ vehicle.prototype.muro=function(group,game)
     
     function()
     {
-      
+      if(this.velocity > 150)
+      audio.playCollisionSound(game);
+      this.velocity = 100;
     }
     
     ,null,this);
@@ -450,7 +468,9 @@ vehicle.prototype.detectaCoche=function(sprite,game,group)
     
     function()
     {
-      
+      if(this.velocity > 200)
+      audio.playCollisionSound(game);
+      this.velocity = 150;
     }
     
     ,null,this);
@@ -502,7 +522,7 @@ this.deslizar=false;
     enemigo,
   }
 
-},{}],3:[function(require,module,exports){
+},{"./AudioSrc.js":1}],3:[function(require,module,exports){
   'use strict';
 
   var PlayScene = require('./play_scene.js');
@@ -553,6 +573,8 @@ this.deslizar=false;
         this.game.load.audio('Bclick','sounds/buttonClick.ogg');
         this.game.load.audio('exit','sounds/SalidaSound.ogg');
         this.game.load.audio('wait','sounds/waitSalidaSound.ogg');
+        this.game.load.audio('colision','sounds/Collision.ogg');
+        this.game.load.audio('engine','sounds/carEngine.ogg');
         
         
     },
@@ -626,10 +648,13 @@ create: function() {
   this.numCharcos = this.levelData.layers[8].objects.length;
   this.numResbala = this.levelData.layers[10].objects.length;
   this.numColliders = this.levelData.layers[7].objects.length;
+  this.numCheckpoints = this.levelData.layers[3].objects.length;
+  this.checkpoints = []
   this.mapColliders = [];
   this.charcos = [];
   this.holes = [];
   this.resbala = [];
+  this.checkpointsGroup = this.game.add.physicsGroup();
   this.holesGroup=this.game.add.physicsGroup();
   this.charcosGroup=this.game.add.physicsGroup();
   this.resbalaGroups=this.game.add.physicsGroup();
@@ -671,6 +696,15 @@ create: function() {
     this.mapColliders[i].body.immovable=true;
     //this.mapColliders[i].body.moves=false;
     this.mapCollidersGroup.add(this.mapColliders[i]);
+  }
+
+  for(var i = 0; i < this.numCheckpoints; i++)
+  {
+    this.checkpoints.push(this.game.add.sprite(this.levelData.layers[3].objects[i].x, this.levelData.layers[3].objects[i].y));
+    this.game.physics.enable(this.checkpoints[i],Phaser.Physics.ARCADE);
+    this.checkpoints[i].body.setSize(this.levelData.layers[3].objects[i].width, this.levelData.layers[3].objects[i].height, 0, 0);
+    this.checkpoints[i].body.immovable=true;
+    this.checkpointsGroup.add(this.checkpoints[i]);
   }
 
 
@@ -735,7 +769,7 @@ create: function() {
   this.laps.fixedToCamera=true;
   this.laps.cameraOffset.setTo(30, 30);
   
-  //CHECKPOINTS
+  /*CHECKPOINTS
   this.checkpoint1=this.game.add.sprite(this.levelData.layers[2].objects[0].x+1000,this.levelData.layers[2].objects[0].y-500,'check');
   this.checkpoint1.scale.setTo(0.5,0.5);
   this.checkpoint2=this.game.add.sprite(this.levelData.layers[2].objects[0].x+400,this.levelData.layers[2].objects[0].y-1100,'check');
@@ -749,7 +783,7 @@ create: function() {
   this.checkpoint4.body.setSize(100,300);
   this.checkpoint3.body.setSize(300,100);
   this.checkpoint2.body.setSize(100,300);
-  this.checkpoint1.body.setSize(400,100,-100);
+  this.checkpoint1.body.setSize(400,100,-100);*/
   //CASCO
   this.casco=this.game.add.sprite(this.levelData.layers[1].objects[0].x, this.levelData.layers[2].objects[0].y,'casco',2);
   this.casco.scale.setTo(0.5,0.5);
@@ -805,10 +839,10 @@ update: function() {
 
   //UPDATE DE MOVIMIENTO
   this.weapon.bulletSpeed =500+this.jugador.velocity;
-  this.game.debug.body(this.checkpoint4);
+ /* this.game.debug.body(this.checkpoint4);
   this.game.debug.body(this.checkpoint3);
   this.game.debug.body(this.checkpoint2);
-  this.game.debug.body(this.checkpoint1);
+  this.game.debug.body(this.checkpoint1);*/
   this.pos.frame=this.jugador.posicion;
   this.lapsCounter.frame=this.contador;
    

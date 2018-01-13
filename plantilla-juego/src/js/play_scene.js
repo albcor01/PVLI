@@ -28,10 +28,13 @@ create: function() {
   this.numCharcos = this.levelData.layers[8].objects.length;
   this.numResbala = this.levelData.layers[10].objects.length;
   this.numColliders = this.levelData.layers[7].objects.length;
+  this.numCheckpoints = this.levelData.layers[3].objects.length;
+  this.checkpoints = []
   this.mapColliders = [];
   this.charcos = [];
   this.holes = [];
   this.resbala = [];
+  this.checkpointsGroup = this.game.add.physicsGroup();
   this.holesGroup=this.game.add.physicsGroup();
   this.charcosGroup=this.game.add.physicsGroup();
   this.resbalaGroups=this.game.add.physicsGroup();
@@ -73,6 +76,15 @@ create: function() {
     this.mapColliders[i].body.immovable=true;
     //this.mapColliders[i].body.moves=false;
     this.mapCollidersGroup.add(this.mapColliders[i]);
+  }
+
+  for(var i = 0; i < this.numCheckpoints; i++)
+  {
+    this.checkpoints.push(this.game.add.sprite(this.levelData.layers[3].objects[i].x, this.levelData.layers[3].objects[i].y));
+    this.game.physics.enable(this.checkpoints[i],Phaser.Physics.ARCADE);
+    this.checkpoints[i].body.setSize(this.levelData.layers[3].objects[i].width, this.levelData.layers[3].objects[i].height, 0, 0);
+    this.checkpoints[i].body.immovable=true;
+    this.checkpointsGroup.add(this.checkpoints[i]);
   }
 
 
@@ -137,7 +149,7 @@ create: function() {
   this.laps.fixedToCamera=true;
   this.laps.cameraOffset.setTo(30, 30);
   
-  //CHECKPOINTS
+  /*CHECKPOINTS
   this.checkpoint1=this.game.add.sprite(this.levelData.layers[2].objects[0].x+1000,this.levelData.layers[2].objects[0].y-500,'check');
   this.checkpoint1.scale.setTo(0.5,0.5);
   this.checkpoint2=this.game.add.sprite(this.levelData.layers[2].objects[0].x+400,this.levelData.layers[2].objects[0].y-1100,'check');
@@ -151,7 +163,7 @@ create: function() {
   this.checkpoint4.body.setSize(100,300);
   this.checkpoint3.body.setSize(300,100);
   this.checkpoint2.body.setSize(100,300);
-  this.checkpoint1.body.setSize(400,100,-100);
+  this.checkpoint1.body.setSize(400,100,-100);*/
   //CASCO
   this.casco=this.game.add.sprite(this.levelData.layers[1].objects[0].x, this.levelData.layers[2].objects[0].y,'casco',2);
   this.casco.scale.setTo(0.5,0.5);
@@ -207,10 +219,10 @@ update: function() {
 
   //UPDATE DE MOVIMIENTO
   this.weapon.bulletSpeed =500+this.jugador.velocity;
-  this.game.debug.body(this.checkpoint4);
+ /* this.game.debug.body(this.checkpoint4);
   this.game.debug.body(this.checkpoint3);
   this.game.debug.body(this.checkpoint2);
-  this.game.debug.body(this.checkpoint1);
+  this.game.debug.body(this.checkpoint1);*/
   this.pos.frame=this.jugador.posicion;
   this.lapsCounter.frame=this.contador;
    

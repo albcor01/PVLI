@@ -9,12 +9,13 @@ var colision;
 var pitido;
 var pitidoSalida;
 var explosion;
+var engine;
 
 //MUSIC
 var playMenuSong = function(game){
     menu = game.add.audio('mainS');
     menu.play();
-
+    menu.volume -= 0.6;
     playMenuSong.Stop = function()
     {
         menu.stop();
@@ -25,7 +26,7 @@ var playMenuSong = function(game){
 var playRaceSong = function(game){
     carrera1 = game.add.audio('raceS');
     carrera1.play();
-    carrera1.volume -= 0.8;
+    carrera1.volume -= 0.9;
     playRaceSong.Stop = function()
     {
         carrera1.stop();
@@ -43,13 +44,8 @@ var playClickSound = function(game){
 };
 
 var playCollisionSound = function(game){
-    colision = game.add.audio('collision');
+    colision = game.add.audio('colision');
     colision.play();
-
-    playCollisionSound.Stop = function()
-    {
-        colision.stop();
-    };
 };
 
 var playExplosionSound = function(game){
@@ -72,6 +68,17 @@ var playPitidoSound = function(game){
     pitido.play();
 };
 
+var playEngineSound = function(game){
+    engine = game.add.audio('engine');
+    engine.volume -= 0.98;
+    engine.play();
+
+    playEngineSound.Stop = function()
+    {
+        engine.stop();
+    };
+};
+
 module.exports = 
 {
     playMenuSong,
@@ -81,4 +88,5 @@ module.exports =
     playExplosionSound,
     playPitidoSalidaSound,
     playPitidoSound,
+    playEngineSound,
 }

@@ -1,4 +1,6 @@
 
+var audio = require('./AudioSrc.js');
+
 //CONSTRUCTORA DE ELEMENTOS DEL MAPA
 var gameObject = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY)
 {
@@ -270,6 +272,7 @@ player.prototype.pos=function(enemies)
 }
 player.prototype.update = function()
 {
+  
   if(this.CanMove){
   if(this.velocity!=0)
   {
@@ -280,6 +283,9 @@ player.prototype.update = function()
 
    if(this.cursors.up.isDown)
   { 
+    if(!audio.isPlaying){
+    audio.playEngineSound(this.game);
+    }
     this.velocity += this.acceleration; 
 
     if(this.velocity > this.MaxVelocity)
@@ -301,6 +307,8 @@ player.prototype.update = function()
   {
     this.velocity+=this.acceleration;
   } 
+
+
 
   if(this.firebutton.downDuration(1)&&this.disparar)
   {
@@ -351,7 +359,9 @@ vehicle.prototype.muro=function(group,game)
     
     function()
     {
-      
+      if(this.velocity > 150)
+      audio.playCollisionSound(game);
+      this.velocity = 100;
     }
     
     ,null,this);
@@ -364,7 +374,9 @@ vehicle.prototype.detectaCoche=function(sprite,game,group)
     
     function()
     {
-      
+      if(this.velocity > 200)
+      audio.playCollisionSound(game);
+      this.velocity = 150;
     }
     
     ,null,this);
