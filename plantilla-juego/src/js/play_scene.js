@@ -223,23 +223,26 @@ update: function() {
    this.jugador.Patinar(this.game,this.resbalaGroups);
    this.jugador.muro(this.mapCollidersGroup,this.game);
    this.jugador.detectaCoche(this.jugador,this.game,this.enemies,this.enemy,this.jugador);
-   
+   this.jugador.acabar(this.enemies,this.jugador);
    //ENEMIGOS
 
 for(var i=0;i<this.enemies.length;i++)
 {
   this.enemies.children[i].congelado(this.weapon,this.congelado);
   this.enemies.children[i].checks(this.game,this.checkpointsGroup,this.contador,this.enemies,this.jugador);
-  if(this.enemies.children[i].contador===-1&&this.enemies.children[i].restar)
+  this.enemies.children[i].acabar(this.enemies,this.jugador);
+  if(this.enemies.children[i].contador===0&&this.enemies.children[i].restar)
   {
     this.enemies.children[i].restar=false;
     this.enemies.children[i].numVueltas++;
   }
- if(this.enemies.children[i].contador===this.checkpointsGroup.length-1)this.enemies.children[i].contador=-1;
+  if(this.enemies.children[i].contador===this.checkpointsGroup.length-1)this.enemies.children[i].contador=-1;
 }
-if(this.jugador.contador===this.checkpointsGroup.length-1) this.jugador.contador=-1;
 
-if(this.jugador.contador===0&&this.jugador.restar)
+
+  if(this.jugador.contador===this.checkpointsGroup.length-1) this.jugador.contador=-1;
+
+  if(this.jugador.contador===0&&this.jugador.restar)
     {
       this.jugador.restar=false;
       this.contador--;
@@ -250,7 +253,7 @@ if(this.jugador.contador===0&&this.jugador.restar)
     {
       this.game.debug.body(this.checkpoints[i]);
     }
-   console.log(this.jugador.posX);
+   
   //CONSOLE LOG
   //ESTA PARTE DEL CÓDIGO DEFINE A QUIEN SIGUE LA CÁMARA EN FUNCIÓN DE SI EL JUGADOR HA CAIDO EN UN AGUJERO O NO
   

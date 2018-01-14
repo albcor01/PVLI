@@ -24,12 +24,13 @@ gameObject.prototype.constructor = gameObject;
 //CONSTRUCOTRA DE VEHICULOS
 var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY,checkA)
 {
+  this.fin=false;
   this.morir=true;
   this.restar=true;
   this.checkA=checkA;
   this.contador=-1;
   this.able=true;
-  this.numVueltas=0;
+  this.numVueltas=2;
   this.game = game
   this.velocity = 0;
   this.acceleration = 5;
@@ -206,6 +207,18 @@ vehicle.prototype.checks=function(game,chekG,contador,enemies,jugador,agujero)
     ,null,this);
 }
 
+vehicle.prototype.acabar=function(enemies,jugador)
+{
+  if(this.numVueltas>3) 
+  {
+    for(var i=0;i<enemies.length;i++)
+  {
+    enemies.children[i].velocity=0;
+  }
+  jugador.velocity=0;
+  }
+}
+
 vehicle.prototype.activateMovement=function()
 {
   this.CanMove = true;
@@ -330,7 +343,6 @@ vehicle.prototype.muro=function(group,game)
       audio.playCollisionSound(game);
       this.velocity = 100;
     }
-    
     ,null,this);
 }
 
