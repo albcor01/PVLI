@@ -48,6 +48,8 @@ vehicle.prototype.constructor = vehicle;
 var player=function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY,cursors,firebutton,weapon,checkA)
 {
   this.newR=this.rotation;
+  this.newPx=posX;
+  this.newPy=posY;
   this.perdido=false;
   this.posicion=3;
   this.game = game;
@@ -182,35 +184,20 @@ vehicle.prototype.checks=function(game,chekG,contador,enemies,jugador,agujero)
       this.contador++;
       if(this===jugador)
       {
-      this.newR=this.rotation;
-      this.morir=false;
-      game.time.events.add(Phaser.Timer.SECOND*2,
-        function()
-        {
-          this.morir=true;
-        },
-      this)
+         this.newR=this.rotation;
+         this.newPx=this.x;
+         this.newPy=this.y;
       }
     }
-    else if(sprite!=this.checkA.children[this.contador+1]&&this===jugador&&this.morir)
+    else if(sprite!=this.checkA.children[this.contador+1]&&this===jugador&&sprite!=this.checkA.children
+      [this.contador]&&this===jugador&&this.morir)
     {
-     if(this.contador>=0)
+     if(this.contador>=0&&this===jugador)
      {
-        this.reset(this.checkA.children[this.contador].x+this.checkA.children[0].width/2,this.checkA.children[this.contador].y);
+        this.reset(this.newPx,this.newPy);
         this.rotation=this.newR;
      }
-     else if (this.contador===-1)
-     {
-       this.reset(this.checkA.children[0].x+this.checkA.children[0].width/2,this.checkA.children[0].y);
-       this.newR=this.rotation;
-     }
-        this.morir=false;
-        game.time.events.add(Phaser.Timer.SECOND*2,
-          function()
-          {
-            this.morir=true;
-          },
-        this)
+     
     }
     if(sprite===this.checkA.children[1]) this.restar=true;
     if(this===jugador) jugador.pos(enemies);

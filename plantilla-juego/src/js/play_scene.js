@@ -149,22 +149,6 @@ create: function() {
   this.laps.scale.setTo(0.7,0.7);
   this.laps.fixedToCamera=true;
   this.laps.cameraOffset.setTo(30, 30);
-  
-  /*CHECKPOINTS
-  this.checkpoint1=this.game.add.sprite(this.levelData.layers[2].objects[0].x+1000,this.levelData.layers[2].objects[0].y-500,'check');
-  this.checkpoint1.scale.setTo(0.5,0.5);
-  this.checkpoint2=this.game.add.sprite(this.levelData.layers[2].objects[0].x+400,this.levelData.layers[2].objects[0].y-1100,'check');
-  this.checkpoint2.scale.setTo(0.5,0.5);
-  this.checkpoint3=this.game.add.sprite(this.levelData.layers[2].objects[0].x-100,this.levelData.layers[2].objects[0].y-1600,'check');
-  this.checkpoint3.scale.setTo(0.5,0.5);
-  this.checkpoint4=this.game.add.sprite(this.levelData.layers[2].objects[0].x+400,this.levelData.layers[2].objects[0].y-100,'check');
-  this.checkpoint4.scale.setTo(0.5,0.5);
-  
-  this.game.physics.enable([ this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4 ], Phaser.Physics.ARCADE);
-  this.checkpoint4.body.setSize(100,300);
-  this.checkpoint3.body.setSize(300,100);
-  this.checkpoint2.body.setSize(100,300);
-  this.checkpoint1.body.setSize(400,100,-100);*/
   //CASCO
   this.casco=this.game.add.sprite(this.levelData.layers[1].objects[0].x, this.levelData.layers[2].objects[0].y,'casco',2);
   this.casco.scale.setTo(0.5,0.5);
@@ -226,10 +210,6 @@ update: function() {
   }
 
   this.weapon.bulletSpeed =500+this.jugador.velocity;
- /* this.game.debug.body(this.checkpoint4);
-  this.game.debug.body(this.checkpoint3);
-  this.game.debug.body(this.checkpoint2);
-  this.game.debug.body(this.checkpoint1);*/
   this.pos.frame=this.jugador.posicion;
   this.lapsCounter.frame=this.contador+1;
    
@@ -257,11 +237,7 @@ for(var i=0;i<this.enemies.length;i++)
   }
  if(this.enemies.children[i].contador===this.checkpointsGroup.length-1)this.enemies.children[i].contador=-1;
 }
-
-
 if(this.jugador.contador===this.checkpointsGroup.length-1) this.jugador.contador=-1;
-
-
 
 if(this.jugador.contador===0&&this.jugador.restar)
     {
@@ -274,7 +250,7 @@ if(this.jugador.contador===0&&this.jugador.restar)
     {
       this.game.debug.body(this.checkpoints[i]);
     }
-   
+   console.log(this.jugador.posX);
   //CONSOLE LOG
   //ESTA PARTE DEL CÓDIGO DEFINE A QUIEN SIGUE LA CÁMARA EN FUNCIÓN DE SI EL JUGADOR HA CAIDO EN UN AGUJERO O NO
   
