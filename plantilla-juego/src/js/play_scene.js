@@ -23,6 +23,7 @@ create: function() {
   /****************************************************************************/
   //Creamos un array de objetos que son obstaculos como elementos colisionables, agujeros
   //o charcos que relentizan o resbalan 
+  
   this.contador=2;
   this.numHoles = this.levelData.layers[6].objects.length;
   this.numCharcos = this.levelData.layers[8].objects.length;
@@ -133,12 +134,12 @@ create: function() {
   this.weapon=this.game.add.weapon(this.Numbalas,'bullet');
   this.fireButton=this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
   this.jugador = new GO.player(this.game, 'car', this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y, 
-  0.5, 0.5, 0.5, 0.5,this.cursors,this.fireButton,this.weapon);
+  0.5, 0.5, 0.5, 0.5,this.cursors,this.fireButton,this.weapon,this.checkpointsGroup);
   this.game.world.addChild(this.jugador);
   //CREAMOS A LOS ENEMIGOS, SERÍA MEJOR COMO UN ARRAY PERO PARA ESO ANTES TENDRÍA QUE ENTENDER MEJOR LOS JSON
-  this.enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5, this.banderas);
-  this.enemy2 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[1].x, this.levelData.layers[2].objects[1].y, 0.5, 0.5, 0.5, 0.5, this.banderas2);
-  this.enemy3 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[2].x, this.levelData.layers[2].objects[2].y, 0.5, 0.5, 0.5, 0.5, this.banderas3);
+  this.enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5, this.banderas,this.checkpointsGroup);
+  this.enemy2 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[1].x, this.levelData.layers[2].objects[1].y, 0.5, 0.5, 0.5, 0.5, this.banderas2,this.checkpointsGroup);
+  this.enemy3 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[2].x, this.levelData.layers[2].objects[2].y, 0.5, 0.5, 0.5, 0.5, this.banderas3,this.checkpointsGroup);
   this.lapsCounter=this.game.add.sprite( this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y,'lapss',3);
   this.lapsCounter.scale.setTo(0.8,0.8);
   this.lapsCounter.fixedToCamera=true;
@@ -214,25 +215,30 @@ create: function() {
   this.timer.start();
   
 },
-
+  
 update: function() {
 
   //UPDATE DE MOVIMIENTO
+
+  for(var i=0;i<this.checkpointsGroup.length;i++)
+  {
+    this.game.debug.body(this.checkpointsGroup.children[i].body);
+  }
+
   this.weapon.bulletSpeed =500+this.jugador.velocity;
  /* this.game.debug.body(this.checkpoint4);
   this.game.debug.body(this.checkpoint3);
   this.game.debug.body(this.checkpoint2);
   this.game.debug.body(this.checkpoint1);*/
   this.pos.frame=this.jugador.posicion;
-  this.lapsCounter.frame=this.contador;
+  this.lapsCounter.frame=this.contador+1;
    
   //UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
 
   //JUGADOR
   
-   this.jugador.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador,this.enemies,this.jugador);
-   this.jugador.muerte(this.game, this.holesGroup, this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y,this.checkpoint1,
-   this.checkpoint1,this.checkpoint3,this.checkpoint4);
+   this.jugador.checks(this.game,this.checkpointsGroup,this.contador,this.enemies,this.jugador,this.holesGroup);
+   this.jugador.muerte(this.game, this.holesGroup,this.checkpointsGroup);
    this.jugador.detectaCharco(this.charcosGroup,this.game);
    this.jugador.Patinar(this.game,this.resbalaGroups);
    this.jugador.muro(this.mapCollidersGroup,this.game);
@@ -243,25 +249,33 @@ update: function() {
 for(var i=0;i<this.enemies.length;i++)
 {
   this.enemies.children[i].congelado(this.weapon,this.congelado);
-  this.enemies.children[i].checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador,this.enemies,this.jugador);
-  if(this.enemies.children[i].contador===4)
+  this.enemies.children[i].checks(this.game,this.checkpointsGroup,this.contador,this.enemies,this.jugador);
+  if(this.enemies.children[i].contador===-1&&this.enemies.children[i].restar)
   {
-    this.enemies.children[i].contador=0;
+    this.enemies.children[i].restar=false;
     this.enemies.children[i].numVueltas++;
   }
+ if(this.enemies.children[i].contador===this.checkpointsGroup.length-1)this.enemies.children[i].contador=-1;
 }
 
-    // console.log(this.enemies.children[2].numVueltas);
-    if(this.jugador.contador===4)
+
+if(this.jugador.contador===this.checkpointsGroup.length-1) this.jugador.contador=-1;
+
+
+
+if(this.jugador.contador===0&&this.jugador.restar)
     {
-      this.jugador.contador=0;
+      this.jugador.restar=false;
       this.contador--;
       this.jugador.numVueltas++;
     }
+
+    for(var i=0;i<this.checkpointsGroup.length;i++)
+    {
+      this.game.debug.body(this.checkpoints[i]);
+    }
    
   //CONSOLE LOG
-  //console.log(this.jugador.posicion);
-
   //ESTA PARTE DEL CÓDIGO DEFINE A QUIEN SIGUE LA CÁMARA EN FUNCIÓN DE SI EL JUGADOR HA CAIDO EN UN AGUJERO O NO
   
    if(this.jugador.alive)

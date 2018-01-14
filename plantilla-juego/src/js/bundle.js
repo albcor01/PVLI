@@ -116,10 +116,12 @@ gameObject.prototype = Object.create(Phaser.Sprite.prototype);
 gameObject.prototype.constructor = gameObject;
 
 //CONSTRUCOTRA DE VEHICULOS
-var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY)
+var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY,checkA)
 {
-  
-  this.contador=0;
+  this.morir=true;
+  this.restar=true;
+  this.checkA=checkA;
+  this.contador=-1;
   this.able=true;
   this.numVueltas=0;
   this.game = game
@@ -131,34 +133,35 @@ var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacal
   this.alive = true;
   this.CanMove = false;
 
- 
-  gameObject.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY);
+  gameObject.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY,checkA);
 };
 vehicle.prototype = Object.create(gameObject.prototype);
 vehicle.prototype.constructor = vehicle;
 
 //CONSTRUCTORA DE PLAYER
-var player=function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY,cursors,firebutton,weapon)
+var player=function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY,cursors,firebutton,weapon,checkA)
 {
+  this.newR=this.rotation;
+  this.perdido=false;
   this.posicion=3;
   this.game = game;
   this.cursors=cursors;
   this.firebutton=firebutton;
   this.weapon=weapon;
-  vehicle.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY);
+  vehicle.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY,checkA);
 };
 player.prototype = Object.create(vehicle.prototype);
 player.prototype.constructor = player;
 
 //CONSTRUCTORA DE ENEMIGO
-var enemigo=function(game, turnRate, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY, road)
+var enemigo=function(game, turnRate, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY, road,checkA)
 {
   
   this.currentFlag = 0;
   this.turnRate = turnRate;
   this.game = game;
   this.aimOnFlag = false;
-  vehicle.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY);
+  vehicle.call(this, game, sprite, posX, posY, anchorX, anchorY, scaleX, sacaleY,checkA);
   this.road = road;
 };
 enemigo.prototype = Object.create(vehicle.prototype);
@@ -211,20 +214,20 @@ enemigo.prototype.update = function()
     }
   }
 
-  if(delta * radianToDegreesFactor < 2 && delta * radianToDegreesFactor > -2){
-  this.aimOnFlag = true;
+    if(delta * radianToDegreesFactor < 2 && delta * radianToDegreesFactor > -2){
+      this.aimOnFlag = true;
  
- }
+  }
 
 }
-else
-{
-  this.MaxVelocity = this.currentMaxVelocity;
-}
+  else
+  {
+   this.MaxVelocity = this.currentMaxVelocity;
+  }
 
-if(this.velocity < this.MaxVelocity){
-  this.velocity += this.acceleration;
-  } else { this.velocity -= this.acceleration-1; }
+  if(this.velocity < this.MaxVelocity){
+    this.velocity += this.acceleration;
+    } else { this.velocity -= this.acceleration-1; }
   
 
 {
@@ -263,60 +266,51 @@ enemigo.prototype.congelado=function(weapon,congelado)
     }
     ,null,this);
 }
-vehicle.prototype.checks=function(game,checkpoint1,checkpoint2,checkpoint3,checkpoint4,contador,enemies,jugador)
+vehicle.prototype.checks=function(game,chekG,contador,enemies,jugador,agujero)
 {
-  game.physics.arcade.overlap(this,checkpoint1,
-    
-    function()
+  game.physics.arcade.overlap(this,chekG,
+    function(chekG,sprite)
     {
-      if(this.contador==0) 
+    if(sprite===this.checkA.children[this.contador+1]) 
+    { 
+      this.contador++;
+      if(this===jugador)
       {
-        this.contador++;
-        
+      this.newR=this.rotation;
+      this.morir=false;
+      game.time.events.add(Phaser.Timer.SECOND*2,
+        function()
+        {
+          this.morir=true;
+        },
+      this)
       }
-      if(this===jugador) jugador.pos(enemies);
+    }
+    else if(sprite!=this.checkA.children[this.contador+1]&&this===jugador&&this.morir)
+    {
+     if(this.contador>=0)
+     {
+        this.reset(this.checkA.children[this.contador].x+this.checkA.children[0].width/2,this.checkA.children[this.contador].y);
+        this.rotation=this.newR;
+     }
+     else if (this.contador===-1)
+     {
+       this.reset(this.checkA.children[0].x+this.checkA.children[0].width/2,this.checkA.children[0].y);
+       this.newR=this.rotation;
+     }
+        this.morir=false;
+        game.time.events.add(Phaser.Timer.SECOND*2,
+          function()
+          {
+            this.morir=true;
+          },
+        this)
+    }
+    if(sprite===this.checkA.children[1]) this.restar=true;
+    if(this===jugador) jugador.pos(enemies);
+    
     }
     ,null,this);
-
-  game.physics.arcade.overlap(this,checkpoint2,
-      
-     function()
-     {
-      if(this.contador==1)
-      {
-        this.contador++;
-        
-      }
-      if(this==jugador) jugador.pos(enemies);
-     }
-    ,null,this);
-
-   game.physics.arcade.overlap(this,checkpoint3,
-        
-     function()
-     {
-      if(this.contador==2) 
-      {
-        this.contador++;
-        
-      }
-      if(this==jugador) jugador.pos(enemies);
-     }
-    ,null,this);
-
-  game.physics.arcade.overlap(this,checkpoint4,
-      
-    function()
-     {
-      if(this.contador==3) 
-      {
-      this.contador++;
-     
-      }
-      if(this==jugador) jugador.pos(enemies);
-     }
-    ,null,this);
-    
 }
 
 vehicle.prototype.activateMovement=function()
@@ -350,17 +344,9 @@ vehicle.prototype.sumarvuelta=function(game,checkpoint4)
 player.prototype.pos=function(enemies)
 {
   this.posicion=3;
-  /*
-  for(var i=0;i<enemies.length;i++)
-    if(this.numVueltas==enemies.children[i].numVueltas)
-      for(var i=0;i<enemies.length;i++)
-        if(this.contador>enemies.children[i].contador) this.posicion--;
-        else;
-    else if(this.numVueltas>enemies.children[i].numVueltas) this.posicion--   
-    */
     for(var i=0;i<enemies.length;i++)
     {
-    if(this.contador>enemies.children[i].contador&&this.numVueltas===enemies.children[i].numVueltas) this.posicion--;
+    if(this.contador>enemies.children[i].contador&&this.numVueltas===enemies.children[i].numVueltas) this.posicion--; 
     else if(this.numVueltas>enemies.children[i].numVueltas)this.posicion--;
     }
 }
@@ -402,8 +388,6 @@ player.prototype.update = function()
     this.velocity+=this.acceleration;
   } 
 
-
-
   if(this.firebutton.downDuration(1)&&this.disparar)
   {
     this.weapon.fire();
@@ -424,13 +408,9 @@ player.prototype.update = function()
 }
 };
 
-
-
 vehicle.prototype.detectaCharco = function(group,game)
 {
   
-  //game.debug.body(charco);
-  //game.debug.body(this.sprite);
   this.relentizar=false;
   if(!this.relentizar)
   {
@@ -441,7 +421,7 @@ vehicle.prototype.detectaCharco = function(group,game)
     function()
     {
       this.relentizar = true;
-      this.MaxVelocity = 60;
+      this.MaxVelocity = 150;
       this.MinVelocity = -60;
     },
      null, this);
@@ -468,15 +448,15 @@ vehicle.prototype.detectaCoche=function(sprite,game,group)
     
     function()
     {
-      if(this.velocity > 200)
+      if(this.velocity > 400)
       audio.playCollisionSound(game);
-      this.velocity = 150;
+      this.velocity = 350;
     }
     
     ,null,this);
 }
 
-vehicle.prototype.muerte=function(game,agujero,x,y,checkpoint1,checkpoint2,checkpoint3,checkpoint4)
+vehicle.prototype.muerte=function(game,agujero,checkG)
 {
 game.physics.arcade.collide(this,agujero,
 
@@ -488,16 +468,15 @@ game.physics.arcade.collide(this,agujero,
     
     function()
     {
-      if(this.contador==1) this.reset(checkpoint1.x, checkpoint1.y);
-      else if (this.contador==2) this.reset(checkpoint2.x, checkpoint2.y);
-      else if (this.contador==3) this.reset(checkpoint3.x, checkpoint3.y);
-      else this.reset(x, y);
+      if(this.contador-1>=0)
+     this.reset(checkG.children[this.contador-1].x,checkG.children[this.contador-1].y);
+     else this.reset(checkG.children[0].x,checkG.children[0].y);
     },
   this)
   },
 null,this);
-};
 
+};
 
 vehicle.prototype.Patinar=function(game,group)
 {
@@ -512,7 +491,6 @@ this.deslizar=false;
     ,null,this);
 
 };
-
 
   module.exports=
   {
@@ -643,6 +621,7 @@ create: function() {
   /****************************************************************************/
   //Creamos un array de objetos que son obstaculos como elementos colisionables, agujeros
   //o charcos que relentizan o resbalan 
+  
   this.contador=2;
   this.numHoles = this.levelData.layers[6].objects.length;
   this.numCharcos = this.levelData.layers[8].objects.length;
@@ -753,12 +732,12 @@ create: function() {
   this.weapon=this.game.add.weapon(this.Numbalas,'bullet');
   this.fireButton=this.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
   this.jugador = new GO.player(this.game, 'car', this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y, 
-  0.5, 0.5, 0.5, 0.5,this.cursors,this.fireButton,this.weapon);
+  0.5, 0.5, 0.5, 0.5,this.cursors,this.fireButton,this.weapon,this.checkpointsGroup);
   this.game.world.addChild(this.jugador);
   //CREAMOS A LOS ENEMIGOS, SERÍA MEJOR COMO UN ARRAY PERO PARA ESO ANTES TENDRÍA QUE ENTENDER MEJOR LOS JSON
-  this.enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5, this.banderas);
-  this.enemy2 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[1].x, this.levelData.layers[2].objects[1].y, 0.5, 0.5, 0.5, 0.5, this.banderas2);
-  this.enemy3 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[2].x, this.levelData.layers[2].objects[2].y, 0.5, 0.5, 0.5, 0.5, this.banderas3);
+  this.enemy = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[0].x, this.levelData.layers[2].objects[0].y, 0.5, 0.5, 0.5, 0.5, this.banderas,this.checkpointsGroup);
+  this.enemy2 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[1].x, this.levelData.layers[2].objects[1].y, 0.5, 0.5, 0.5, 0.5, this.banderas2,this.checkpointsGroup);
+  this.enemy3 = new GO.enemigo(this.game, 2, 'carEnemy', this.levelData.layers[2].objects[2].x, this.levelData.layers[2].objects[2].y, 0.5, 0.5, 0.5, 0.5, this.banderas3,this.checkpointsGroup);
   this.lapsCounter=this.game.add.sprite( this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y,'lapss',3);
   this.lapsCounter.scale.setTo(0.8,0.8);
   this.lapsCounter.fixedToCamera=true;
@@ -834,25 +813,30 @@ create: function() {
   this.timer.start();
   
 },
-
+  
 update: function() {
 
   //UPDATE DE MOVIMIENTO
+
+  for(var i=0;i<this.checkpointsGroup.length;i++)
+  {
+    this.game.debug.body(this.checkpointsGroup.children[i].body);
+  }
+
   this.weapon.bulletSpeed =500+this.jugador.velocity;
  /* this.game.debug.body(this.checkpoint4);
   this.game.debug.body(this.checkpoint3);
   this.game.debug.body(this.checkpoint2);
   this.game.debug.body(this.checkpoint1);*/
   this.pos.frame=this.jugador.posicion;
-  this.lapsCounter.frame=this.contador;
+  this.lapsCounter.frame=this.contador+1;
    
   //UPDATE DE DETECCIÓN DE ELEMENTOS DEL MAPA
 
   //JUGADOR
   
-   this.jugador.checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador,this.enemies,this.jugador);
-   this.jugador.muerte(this.game, this.holesGroup, this.levelData.layers[1].objects[0].x, this.levelData.layers[1].objects[0].y,this.checkpoint1,
-   this.checkpoint1,this.checkpoint3,this.checkpoint4);
+   this.jugador.checks(this.game,this.checkpointsGroup,this.contador,this.enemies,this.jugador,this.holesGroup);
+   this.jugador.muerte(this.game, this.holesGroup,this.checkpointsGroup);
    this.jugador.detectaCharco(this.charcosGroup,this.game);
    this.jugador.Patinar(this.game,this.resbalaGroups);
    this.jugador.muro(this.mapCollidersGroup,this.game);
@@ -863,25 +847,33 @@ update: function() {
 for(var i=0;i<this.enemies.length;i++)
 {
   this.enemies.children[i].congelado(this.weapon,this.congelado);
-  this.enemies.children[i].checks(this.game,this.checkpoint1,this.checkpoint2,this.checkpoint3,this.checkpoint4,this.contador,this.enemies,this.jugador);
-  if(this.enemies.children[i].contador===4)
+  this.enemies.children[i].checks(this.game,this.checkpointsGroup,this.contador,this.enemies,this.jugador);
+  if(this.enemies.children[i].contador===-1&&this.enemies.children[i].restar)
   {
-    this.enemies.children[i].contador=0;
+    this.enemies.children[i].restar=false;
     this.enemies.children[i].numVueltas++;
   }
+ if(this.enemies.children[i].contador===this.checkpointsGroup.length-1)this.enemies.children[i].contador=-1;
 }
 
-    // console.log(this.enemies.children[2].numVueltas);
-    if(this.jugador.contador===4)
+
+if(this.jugador.contador===this.checkpointsGroup.length-1) this.jugador.contador=-1;
+
+
+
+if(this.jugador.contador===0&&this.jugador.restar)
     {
-      this.jugador.contador=0;
+      this.jugador.restar=false;
       this.contador--;
       this.jugador.numVueltas++;
     }
+
+    for(var i=0;i<this.checkpointsGroup.length;i++)
+    {
+      this.game.debug.body(this.checkpoints[i]);
+    }
    
   //CONSOLE LOG
-  //console.log(this.jugador.posicion);
-
   //ESTA PARTE DEL CÓDIGO DEFINE A QUIEN SIGUE LA CÁMARA EN FUNCIÓN DE SI EL JUGADOR HA CAIDO EN UN AGUJERO O NO
   
    if(this.jugador.alive)
