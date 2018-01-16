@@ -3,6 +3,7 @@
   var PlayScene = require('./play_scene.js');
   var vehicle = require('./Vehiculo.js');
   var mainMenu = require('./mainMenu.js');
+  var Derrota = require('./MenuDerrota.js');
 
   var BootScene = {
     preload: function () {
@@ -36,6 +37,10 @@
         this.game.load.image('menu', 'images/menu.jpg');
         this.game.load.image('playButton', 'images/play.jpg');
         this.game.load.image('laps','images/Hud/laps.png');
+        this.game.load.image('BackToMenuButton','images/backToMenuButon.png');
+        this.game.load.image('PlayAgainButton','images/CorrerOtraVez.png');
+        this.game.load.image('MenuDerrota','images/MenuDerrota.png');
+        this.game.load.image('MenuVictoria','images/Victoria.png');
         this.game.load.spritesheet('lapss','images/Hud/LapsCounter.png',55,55,55);
         this.game.load.image('check','images/checkpoint.png');
         this.game.load.spritesheet('casco','images/Hud/casco.png',87,120,2);
@@ -67,5 +72,7 @@
     game.state.add('preloader', PreloaderScene);
     game.state.add('play', PlayScene);
     game.state.add('Menu', mainMenu);
+    game.state.add('PanelDerrota', Derrota);
+    //game.state.add('PanelVictoria', Victoria);
     game.state.start('boot');
   };

@@ -212,10 +212,18 @@ vehicle.prototype.acabar=function(enemies,jugador)
   if(this.numVueltas>3) 
   {
     for(var i=0;i<enemies.length;i++)
-  {
+    {
     enemies.children[i].velocity=0;
-  }
+    }
   jugador.velocity=0;
+
+  this.game.time.events.add(Phaser.Timer.SECOND * 2, function()
+    {
+      if(this.posicion !== 1)
+      this.game.state.start('PanelDerrota');
+    }
+  , this);
+
   }
 }
 

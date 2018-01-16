@@ -92,6 +92,38 @@ module.exports =
     playEngineSound,
 }
 },{}],2:[function(require,module,exports){
+'use strict';
+var audio = require('./AudioSrc.js')
+var Derrota = 
+{
+    create: function(){
+      
+        audio.playMenuSong(this.game);
+
+        this.fondo = this.game.add.sprite(0, 0, 'MenuDerrota');     
+
+        this.PlayAgainButton = this.game.add.button(100, 315, 'PlayAgainButton', function startGame()
+        {
+            audio.playMenuSong.Stop();
+            audio.playClickSound(this.game);
+            this.game.state.start('play');
+        },
+         this, 2, 1, 0);
+
+         this.buttonBackToMenu = this.game.add.button(500, 315, 'BackToMenuButton', function startGame()
+        {
+            audio.playMenuSong.Stop();
+            audio.playClickSound(this.game);
+            this.game.state.start('Menu');
+        },
+         this, 2, 1, 0);
+
+       
+    },
+}
+
+module.exports = Derrota;
+},{"./AudioSrc.js":1}],3:[function(require,module,exports){
 
 var audio = require('./AudioSrc.js');
 
@@ -306,10 +338,18 @@ vehicle.prototype.acabar=function(enemies,jugador)
   if(this.numVueltas>3) 
   {
     for(var i=0;i<enemies.length;i++)
-  {
+    {
     enemies.children[i].velocity=0;
-  }
+    }
   jugador.velocity=0;
+
+  this.game.time.events.add(Phaser.Timer.SECOND * 2, function()
+    {
+      if(this.posicion !== 1)
+      this.game.state.start('PanelDerrota');
+    }
+  , this);
+
   }
 }
 
@@ -499,12 +539,13 @@ this.deslizar=false;
     enemigo,
   }
 
-},{"./AudioSrc.js":1}],3:[function(require,module,exports){
+},{"./AudioSrc.js":1}],4:[function(require,module,exports){
   'use strict';
 
   var PlayScene = require('./play_scene.js');
   var vehicle = require('./Vehiculo.js');
   var mainMenu = require('./mainMenu.js');
+  var Derrota = require('./MenuDerrota.js');
 
   var BootScene = {
     preload: function () {
@@ -538,6 +579,10 @@ this.deslizar=false;
         this.game.load.image('menu', 'images/menu.jpg');
         this.game.load.image('playButton', 'images/play.jpg');
         this.game.load.image('laps','images/Hud/laps.png');
+        this.game.load.image('BackToMenuButton','images/backToMenuButon.png');
+        this.game.load.image('PlayAgainButton','images/CorrerOtraVez.png');
+        this.game.load.image('MenuDerrota','images/MenuDerrota.png');
+        this.game.load.image('MenuVictoria','images/Victoria.png');
         this.game.load.spritesheet('lapss','images/Hud/LapsCounter.png',55,55,55);
         this.game.load.image('check','images/checkpoint.png');
         this.game.load.spritesheet('casco','images/Hud/casco.png',87,120,2);
@@ -569,10 +614,12 @@ this.deslizar=false;
     game.state.add('preloader', PreloaderScene);
     game.state.add('play', PlayScene);
     game.state.add('Menu', mainMenu);
+    game.state.add('PanelDerrota', Derrota);
+    //game.state.add('PanelVictoria', Victoria);
     game.state.start('boot');
   };
 
-},{"./Vehiculo.js":2,"./mainMenu.js":4,"./play_scene.js":5}],4:[function(require,module,exports){
+},{"./MenuDerrota.js":2,"./Vehiculo.js":3,"./mainMenu.js":5,"./play_scene.js":6}],5:[function(require,module,exports){
 'use strict';
 var audio = require('./AudioSrc.js')
 var mainMenu = 
@@ -594,7 +641,7 @@ var mainMenu =
 }
 
 module.exports = mainMenu;
-},{"./AudioSrc.js":1}],5:[function(require,module,exports){
+},{"./AudioSrc.js":1}],6:[function(require,module,exports){
 'use strict';
 //VEHICULOS
 
@@ -869,4 +916,4 @@ render: function() {
 module.exports = PlayScene;
   
 
-},{"./AudioSrc.js":1,"./Vehiculo.js":2}]},{},[3]);
+},{"./AudioSrc.js":1,"./Vehiculo.js":3}]},{},[4]);
