@@ -1,6 +1,6 @@
 'use strict';
 var audio = require('./AudioSrc.js')
-var Derrota = 
+var Victoria = 
 {
     create: function(){
       
@@ -28,4 +28,4 @@ var Derrota =
     },
 }
 
-module.exports = Derrota;
+module.exports = Victoria;

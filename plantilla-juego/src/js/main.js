@@ -5,6 +5,7 @@
   var mainMenu = require('./mainMenu.js');
   var Derrota = require('./MenuDerrota.js');
   var Victoria = require('./MenuVictoria.js');
+  var ControlesMenu = require('./Controls.js');
 
   var BootScene = {
     preload: function () {
@@ -40,6 +41,8 @@
         this.game.load.image('laps','images/Hud/laps.png');
         this.game.load.image('BackToMenuButton','images/backToMenuButon.png');
         this.game.load.image('PlayAgainButton','images/CorrerOtraVez.png');
+        this.game.load.image('controls','images/controls.png');
+        this.game.load.image('fondoControls','images/Controles.png');
         this.game.load.image('MenuDerrota','images/MenuDerrota.png');
         this.game.load.image('MenuVictoria','images/Victoria.png');
         this.game.load.spritesheet('lapss','images/Hud/LapsCounter.png',55,55,55);
@@ -77,5 +80,6 @@
     game.state.add('Menu', mainMenu);
     game.state.add('PanelDerrota', Derrota);
     game.state.add('PanelVictoria', Victoria);
+    game.state.add('PanelControles', ControlesMenu);
     game.state.start('boot');
   };

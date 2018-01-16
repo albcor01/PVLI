@@ -14,7 +14,16 @@ var mainMenu =
         },
          this, 2, 1, 0);
 
-        this.fondo = this.game.add.sprite(0, 0, 'menu');     
+
+         this.buttonControls = this.game.add.button(400, 500, 'controls', function startGame()
+         {
+             //audio.playMenuSong.Stop();
+             audio.playClickSound(this.game);
+             this.game.state.start('PanelControles');
+         },
+          this, 2, 1, 0);
+
+        this.fondo = this.game.add.sprite(0, 0, 'PanelControles');     
     },
 }
 
