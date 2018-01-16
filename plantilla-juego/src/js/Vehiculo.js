@@ -30,7 +30,7 @@ var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacal
   this.checkA=checkA;
   this.contador=-1;
   this.able=true;
-  this.numVueltas=2;
+  this.numVueltas=0;
   this.game = game
   this.velocity = 0;
   this.acceleration = 5;
@@ -164,6 +164,7 @@ enemigo.prototype.congelado=function(weapon,congelado)
     function(sprite,bullet)
     { 
      bullet.kill();
+     audio.playHitSound(this.game);
      this.velocity=0;
      this.acceleration=0;
       this.game.time.events.add(Phaser.Timer.SECOND*1.5,
@@ -219,8 +220,12 @@ vehicle.prototype.acabar=function(enemies,jugador)
 
   this.game.time.events.add(Phaser.Timer.SECOND * 2, function()
     {
-      if(this.posicion !== 1)
-      this.game.state.start('PanelDerrota');
+      console.log(jugador.posicion);
+      if(jugador.posicion === 0)
+      this.game.state.start('PanelVictoria');
+      else{ this.game.state.start('PanelDerrota'); }
+        audio.playRaceSong.Stop();
+
     }
   , this);
 
@@ -305,6 +310,7 @@ player.prototype.update = function()
   if(this.firebutton.downDuration(1)&&this.disparar)
   {
     this.weapon.fire();
+    audio.playShootSound(this.game);
     this.disparar=false;
     this.game.time.events.add(Phaser.Timer.SECOND*5,
       

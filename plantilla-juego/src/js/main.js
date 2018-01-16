@@ -4,6 +4,7 @@
   var vehicle = require('./Vehiculo.js');
   var mainMenu = require('./mainMenu.js');
   var Derrota = require('./MenuDerrota.js');
+  var Victoria = require('./MenuVictoria.js');
 
   var BootScene = {
     preload: function () {
@@ -55,6 +56,8 @@
         this.game.load.audio('wait','sounds/waitSalidaSound.ogg');
         this.game.load.audio('colision','sounds/Collision.ogg');
         this.game.load.audio('engine','sounds/carEngine.ogg');
+        this.game.load.audio('shoot','sounds/ShootSound.ogg');
+        this.game.load.audio('hit','sounds/HitSound.ogg');
         
         
     },
@@ -73,6 +76,6 @@
     game.state.add('play', PlayScene);
     game.state.add('Menu', mainMenu);
     game.state.add('PanelDerrota', Derrota);
-    //game.state.add('PanelVictoria', Victoria);
+    game.state.add('PanelVictoria', Victoria);
     game.state.start('boot');
   };

@@ -249,10 +249,11 @@ for(var i=0;i<this.enemies.length;i++)
       this.jugador.numVueltas++;
     }
 
-    for(var i=0;i<this.checkpointsGroup.length;i++)
+    //PARA DEBUGEAR EL BODY DE LOS CHECKPOINTS
+   /* for(var i=0;i<this.checkpointsGroup.length;i++)
     {
       this.game.debug.body(this.checkpoints[i]);
-    }
+    }*/
    
   //CONSOLE LOG
   //ESTA PARTE DEL CÓDIGO DEFINE A QUIEN SIGUE LA CÁMARA EN FUNCIÓN DE SI EL JUGADOR HA CAIDO EN UN AGUJERO O NO

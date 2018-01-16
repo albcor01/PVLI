@@ -10,12 +10,14 @@ var colision;
 var pitido;
 var pitidoSalida;
 var explosion;
+var hit;
+var shoot;
 var engine;
 
 //MUSIC
 var playMenuSong = function(game){
     menu = game.add.audio('mainS');
-    menu.play();
+    menu.loopFull();
     menu.volume -= 0.6;
     playMenuSong.Stop = function()
     {
@@ -26,7 +28,7 @@ var playMenuSong = function(game){
 
 var playRaceSong = function(game){
     carrera1 = game.add.audio('raceS');
-    carrera1.play();
+    carrera1.loopFull();
     carrera1.volume -= 0.9;
     playRaceSong.Stop = function()
     {
@@ -47,6 +49,16 @@ var playClickSound = function(game){
 var playCollisionSound = function(game){
     colision = game.add.audio('colision');
     colision.play();
+};
+
+var playShootSound = function(game){
+    shoot = game.add.audio('shoot');
+    shoot.play();
+};
+
+var playHitSound = function(game){
+    hit = game.add.audio('hit');
+    hit.play();
 };
 
 var playExplosionSound = function(game){
@@ -90,6 +102,8 @@ module.exports =
     playPitidoSalidaSound,
     playPitidoSound,
     playEngineSound,
+    playHitSound,
+    playShootSound,
 }
 },{}],2:[function(require,module,exports){
 'use strict';
@@ -102,7 +116,7 @@ var Derrota =
 
         this.fondo = this.game.add.sprite(0, 0, 'MenuDerrota');     
 
-        this.PlayAgainButton = this.game.add.button(100, 315, 'PlayAgainButton', function startGame()
+        this.PlayAgainButton = this.game.add.button(115, 225, 'PlayAgainButton', function startGame()
         {
             audio.playMenuSong.Stop();
             audio.playClickSound(this.game);
@@ -110,7 +124,7 @@ var Derrota =
         },
          this, 2, 1, 0);
 
-         this.buttonBackToMenu = this.game.add.button(500, 315, 'BackToMenuButton', function startGame()
+         this.buttonBackToMenu = this.game.add.button(450, 225, 'BackToMenuButton', function startGame()
         {
             audio.playMenuSong.Stop();
             audio.playClickSound(this.game);
@@ -124,6 +138,38 @@ var Derrota =
 
 module.exports = Derrota;
 },{"./AudioSrc.js":1}],3:[function(require,module,exports){
+'use strict';
+var audio = require('./AudioSrc.js')
+var Derrota = 
+{
+    create: function(){
+      
+        audio.playMenuSong(this.game);
+
+        this.fondo = this.game.add.sprite(0, 0, 'MenuVictoria');     
+
+        this.PlayAgainButton = this.game.add.button(40, 225, 'PlayAgainButton', function startGame()
+        {
+            audio.playMenuSong.Stop();
+            audio.playClickSound(this.game);
+            this.game.state.start('play');
+        },
+         this, 2, 1, 0);
+
+         this.buttonBackToMenu = this.game.add.button(520, 225, 'BackToMenuButton', function startGame()
+        {
+            audio.playMenuSong.Stop();
+            audio.playClickSound(this.game);
+            this.game.state.start('Menu');
+        },
+         this, 2, 1, 0);
+
+       
+    },
+}
+
+module.exports = Derrota;
+},{"./AudioSrc.js":1}],4:[function(require,module,exports){
 
 var audio = require('./AudioSrc.js');
 
@@ -156,7 +202,7 @@ var vehicle = function(game, sprite, posX, posY, anchorX, anchorY, scaleX, sacal
   this.checkA=checkA;
   this.contador=-1;
   this.able=true;
-  this.numVueltas=2;
+  this.numVueltas=0;
   this.game = game
   this.velocity = 0;
   this.acceleration = 5;
@@ -290,6 +336,7 @@ enemigo.prototype.congelado=function(weapon,congelado)
     function(sprite,bullet)
     { 
      bullet.kill();
+     audio.playHitSound(this.game);
      this.velocity=0;
      this.acceleration=0;
       this.game.time.events.add(Phaser.Timer.SECOND*1.5,
@@ -345,8 +392,12 @@ vehicle.prototype.acabar=function(enemies,jugador)
 
   this.game.time.events.add(Phaser.Timer.SECOND * 2, function()
     {
-      if(this.posicion !== 1)
-      this.game.state.start('PanelDerrota');
+      console.log(jugador.posicion);
+      if(jugador.posicion === 0)
+      this.game.state.start('PanelVictoria');
+      else{ this.game.state.start('PanelDerrota'); }
+        audio.playRaceSong.Stop();
+
     }
   , this);
 
@@ -431,6 +482,7 @@ player.prototype.update = function()
   if(this.firebutton.downDuration(1)&&this.disparar)
   {
     this.weapon.fire();
+    audio.playShootSound(this.game);
     this.disparar=false;
     this.game.time.events.add(Phaser.Timer.SECOND*5,
       
@@ -539,13 +591,14 @@ this.deslizar=false;
     enemigo,
   }
 
-},{"./AudioSrc.js":1}],4:[function(require,module,exports){
+},{"./AudioSrc.js":1}],5:[function(require,module,exports){
   'use strict';
 
   var PlayScene = require('./play_scene.js');
   var vehicle = require('./Vehiculo.js');
   var mainMenu = require('./mainMenu.js');
   var Derrota = require('./MenuDerrota.js');
+  var Victoria = require('./MenuVictoria.js');
 
   var BootScene = {
     preload: function () {
@@ -597,6 +650,8 @@ this.deslizar=false;
         this.game.load.audio('wait','sounds/waitSalidaSound.ogg');
         this.game.load.audio('colision','sounds/Collision.ogg');
         this.game.load.audio('engine','sounds/carEngine.ogg');
+        this.game.load.audio('shoot','sounds/ShootSound.ogg');
+        this.game.load.audio('hit','sounds/HitSound.ogg');
         
         
     },
@@ -615,11 +670,11 @@ this.deslizar=false;
     game.state.add('play', PlayScene);
     game.state.add('Menu', mainMenu);
     game.state.add('PanelDerrota', Derrota);
-    //game.state.add('PanelVictoria', Victoria);
+    game.state.add('PanelVictoria', Victoria);
     game.state.start('boot');
   };
 
-},{"./MenuDerrota.js":2,"./Vehiculo.js":3,"./mainMenu.js":5,"./play_scene.js":6}],5:[function(require,module,exports){
+},{"./MenuDerrota.js":2,"./MenuVictoria.js":3,"./Vehiculo.js":4,"./mainMenu.js":6,"./play_scene.js":7}],6:[function(require,module,exports){
 'use strict';
 var audio = require('./AudioSrc.js')
 var mainMenu = 
@@ -641,7 +696,7 @@ var mainMenu =
 }
 
 module.exports = mainMenu;
-},{"./AudioSrc.js":1}],6:[function(require,module,exports){
+},{"./AudioSrc.js":1}],7:[function(require,module,exports){
 'use strict';
 //VEHICULOS
 
@@ -893,10 +948,11 @@ for(var i=0;i<this.enemies.length;i++)
       this.jugador.numVueltas++;
     }
 
-    for(var i=0;i<this.checkpointsGroup.length;i++)
+    //PARA DEBUGEAR EL BODY DE LOS CHECKPOINTS
+   /* for(var i=0;i<this.checkpointsGroup.length;i++)
     {
       this.game.debug.body(this.checkpoints[i]);
-    }
+    }*/
    
   //CONSOLE LOG
   //ESTA PARTE DEL CÓDIGO DEFINE A QUIEN SIGUE LA CÁMARA EN FUNCIÓN DE SI EL JUGADOR HA CAIDO EN UN AGUJERO O NO
@@ -916,4 +972,4 @@ render: function() {
 module.exports = PlayScene;
   
 
-},{"./AudioSrc.js":1,"./Vehiculo.js":3}]},{},[4]);
+},{"./AudioSrc.js":1,"./Vehiculo.js":4}]},{},[5]);
