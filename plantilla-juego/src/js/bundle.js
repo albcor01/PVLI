@@ -108,6 +108,27 @@ module.exports =
 },{}],2:[function(require,module,exports){
 'use strict';
 var audio = require('./AudioSrc.js')
+var Controls = 
+{
+    create: function(){
+
+        this.fondo = this.game.add.sprite(0, 0, 'fondoControls');  
+
+        this.button = this.game.add.button(400, 415, 'BackToMenuButton', function startGame()
+        {
+           // audio.playMenuSong.Stop();
+            audio.playClickSound(this.game);
+            this.game.state.start('Menu');
+            audio.playMenuSong.Stop()
+        },
+         this, 2, 1, 0);    
+    },
+}
+
+module.exports = Controls;
+},{"./AudioSrc.js":1}],3:[function(require,module,exports){
+'use strict';
+var audio = require('./AudioSrc.js')
 var Derrota = 
 {
     create: function(){
@@ -137,10 +158,10 @@ var Derrota =
 }
 
 module.exports = Derrota;
-},{"./AudioSrc.js":1}],3:[function(require,module,exports){
+},{"./AudioSrc.js":1}],4:[function(require,module,exports){
 'use strict';
 var audio = require('./AudioSrc.js')
-var Derrota = 
+var Victoria = 
 {
     create: function(){
       
@@ -168,8 +189,8 @@ var Derrota =
     },
 }
 
-module.exports = Derrota;
-},{"./AudioSrc.js":1}],4:[function(require,module,exports){
+module.exports = Victoria;
+},{"./AudioSrc.js":1}],5:[function(require,module,exports){
 
 var audio = require('./AudioSrc.js');
 
@@ -591,7 +612,7 @@ this.deslizar=false;
     enemigo,
   }
 
-},{"./AudioSrc.js":1}],5:[function(require,module,exports){
+},{"./AudioSrc.js":1}],6:[function(require,module,exports){
   'use strict';
 
   var PlayScene = require('./play_scene.js');
@@ -599,6 +620,7 @@ this.deslizar=false;
   var mainMenu = require('./mainMenu.js');
   var Derrota = require('./MenuDerrota.js');
   var Victoria = require('./MenuVictoria.js');
+  var ControlesMenu = require('./Controls.js');
 
   var BootScene = {
     preload: function () {
@@ -634,6 +656,8 @@ this.deslizar=false;
         this.game.load.image('laps','images/Hud/laps.png');
         this.game.load.image('BackToMenuButton','images/backToMenuButon.png');
         this.game.load.image('PlayAgainButton','images/CorrerOtraVez.png');
+        this.game.load.image('controls','images/controls.png');
+        this.game.load.image('fondoControls','images/Controles.png');
         this.game.load.image('MenuDerrota','images/MenuDerrota.png');
         this.game.load.image('MenuVictoria','images/Victoria.png');
         this.game.load.spritesheet('lapss','images/Hud/LapsCounter.png',55,55,55);
@@ -671,10 +695,11 @@ this.deslizar=false;
     game.state.add('Menu', mainMenu);
     game.state.add('PanelDerrota', Derrota);
     game.state.add('PanelVictoria', Victoria);
+    game.state.add('PanelControles', ControlesMenu);
     game.state.start('boot');
   };
 
-},{"./MenuDerrota.js":2,"./MenuVictoria.js":3,"./Vehiculo.js":4,"./mainMenu.js":6,"./play_scene.js":7}],6:[function(require,module,exports){
+},{"./Controls.js":2,"./MenuDerrota.js":3,"./MenuVictoria.js":4,"./Vehiculo.js":5,"./mainMenu.js":7,"./play_scene.js":8}],7:[function(require,module,exports){
 'use strict';
 var audio = require('./AudioSrc.js')
 var mainMenu = 
@@ -682,7 +707,7 @@ var mainMenu =
     create: function(){
       
         audio.playMenuSong(this.game);
-
+        this.fondo = this.game.add.sprite(0, 0, 'menu'); 
         this.button = this.game.add.button(300, 315, 'playButton', function startGame()
         {
             audio.playMenuSong.Stop();
@@ -691,12 +716,22 @@ var mainMenu =
         },
          this, 2, 1, 0);
 
-        this.fondo = this.game.add.sprite(0, 0, 'menu');     
+
+         this.buttonControls = this.game.add.button(400, 500, 'controls', function startGame()
+         {
+             //audio.playMenuSong.Stop();
+             audio.playClickSound(this.game);
+             this.game.state.start('PanelControles');
+         },
+          this, 2, 1, 0);
+
+         
+            
     },
 }
 
 module.exports = mainMenu;
-},{"./AudioSrc.js":1}],7:[function(require,module,exports){
+},{"./AudioSrc.js":1}],8:[function(require,module,exports){
 'use strict';
 //VEHICULOS
 
@@ -972,4 +1007,4 @@ render: function() {
 module.exports = PlayScene;
   
 
-},{"./AudioSrc.js":1,"./Vehiculo.js":4}]},{},[5]);
+},{"./AudioSrc.js":1,"./Vehiculo.js":5}]},{},[6]);

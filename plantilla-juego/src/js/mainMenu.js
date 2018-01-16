@@ -5,7 +5,7 @@ var mainMenu =
     create: function(){
       
         audio.playMenuSong(this.game);
-
+        this.fondo = this.game.add.sprite(0, 0, 'menu'); 
         this.button = this.game.add.button(300, 315, 'playButton', function startGame()
         {
             audio.playMenuSong.Stop();
@@ -23,7 +23,8 @@ var mainMenu =
          },
           this, 2, 1, 0);
 
-        this.fondo = this.game.add.sprite(0, 0, 'PanelControles');     
+         
+            
     },
 }
 
