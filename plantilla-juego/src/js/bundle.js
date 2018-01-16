@@ -717,7 +717,7 @@ var mainMenu =
          this, 2, 1, 0);
 
 
-         this.buttonControls = this.game.add.button(400, 500, 'controls', function startGame()
+         this.buttonControls = this.game.add.button(550, 550, 'controls', function startGame()
          {
              //audio.playMenuSong.Stop();
              audio.playClickSound(this.game);
