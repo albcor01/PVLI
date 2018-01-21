@@ -2,6 +2,9 @@
 Alberto Córdoba Ortiz: albcor01@ucm.es
 Mario De Los Santos: mdlos02@ucm.es
 
+Titulo: 
+##MICROMACHITOS
+
 ## Mecánicas:
 El giro es gradual en los 360º
 Frenar/Acelerar de manera paulatina
@@ -12,6 +15,11 @@ De ser destruido volverás a aparecer en el punto más cercano donde estabas den
 Puedes colisionar con objetos del mapa que te harán perder velocidad
 Los enemigos avanzan por la carretera de mantera que intentan alcanzar la meta evitando colisionar con los elementos del mapa.
 El juegadorpuede disparar una bala para congelar a los enemigos temporalmente
+
+##Controles:
+	flechas para conducir
+	SpaceBar para disparar
+	click del raton para los botones
 
 ![alt text]( http://www.abandonia.com/files/games/77/Micro%20Machines_4.png "EJEMPLO DE JUEGO")
 
@@ -37,5 +45,8 @@ El juego tiene:
 -Lineas que indican el camino a seguir
 -Objeto de derrape
 -Objetos que relentizan
+
+El juego ofrece una carrera balanceada que engancha al jugador a repiterla constantemente hasta ser capaz de ganar, no es trivial
+por lo que el jugador precisará de varios intentos para conseguirlo.
 
 
